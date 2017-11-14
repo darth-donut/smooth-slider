@@ -7,13 +7,13 @@
 #define SLIDER_STRATEGY_H
 
 #include "Slider.h"
-#include "Move.h"
 
+template <typename T, typename State>
 class Strategy {
 public:
     /// considers the next best move to make
     /// \return the next best move
-    virtual Move next_move(const Slider&) = 0;
+    virtual T next_move(const State&) const = 0 ;
 };
 
 
