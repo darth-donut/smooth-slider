@@ -4,8 +4,17 @@ project(slider)
 set(CMAKE_CXX_STANDARD 11)
 set(EXE slider)
 
-# set src/hdr
-set(SOURCE_FILES src/main.cpp src/slider/Slider.cc src/slider/Board.cc)
+# set src/header
+set(SOURCE_FILES
+        src/main.cpp
+        src/slider/Slider.cc
+        src/slider/Board.cc
+        include/commons/ai/agent/Minimax.h
+        include/commons/ai/Strategy.h
+        include/slider/Board.h
+        include/slider/Move.h
+        include/slider/Slider.h)
+
 include_directories(include include/commons include/commons/ai include/slider)
 
 add_executable(${EXE} ${SOURCE_FILES})
