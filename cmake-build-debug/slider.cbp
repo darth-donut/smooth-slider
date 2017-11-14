@@ -92,6 +92,21 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/ai/Strategy.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/ai/agent/Minimax.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Board.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Move.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Slider.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/main.cpp">
 			<Option target="slider"/>
 		</Unit>
