@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <cassert>
 #include "commons/util.h"
 
 #include "Board.h"
@@ -51,7 +52,7 @@ Board::Board(const std::string &str_board) {
         // next row, please.
         ++i;
     }
-
+    assert(i == size);
 }
 
 void
@@ -98,5 +99,21 @@ operator<<(std::ostream &os, const Board &board) {
     }
     buffer.pop_back();      // don't need the last newline
     return os << buffer;
+}
+
+bool
+Board::make_move(const Move &move) {
+    if (is_legal(move)) {
+        auto new_coord = move.apply_move();
+        auto old_x = move.get_coord().first, old_y = move.get_coord().second;
+        board[new_coord.first][new_coord.second] = board[old_x][old_y];
+        board[old_x][old_y] = SliderPiece::Blank;
+        return true;
+    }
+    return false;
+}
+
+bool Board::is_legal(const Move &move) const {
+    // TODO!!
 }
 
