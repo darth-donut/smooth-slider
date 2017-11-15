@@ -10,6 +10,7 @@
 #include <iostream>
 #include <vector>
 #include <stdexcept>
+
 #include "Move.h"
 
 /*
@@ -25,7 +26,7 @@
  * (0, N) ----------------> (N,N)
  */
 
-enum class SliderPiece {
+enum class SliderPiece : char {
     Vertical, Horizontal, Blank
 };
 
@@ -33,17 +34,21 @@ class Board {
     friend std::ostream &operator<<(std::ostream &, const Board &);
 
 public:
-    typedef std::size_t size_type;
+    typedef std::vector<SliderPiece>::size_type size_type;
 
     explicit Board(const std::string &board);
 
-    explicit Board(const std::size_t size);
+    explicit Board(size_type);
 
     bool make_move(const Move &move);
 
     bool is_legal(const Move &move) const;
 
     size_type get_size() const { return size; }
+
+    std::vector<SliderPiece> &operator[](size_type n) { return board[n]; }
+
+    const std::vector<SliderPiece> &operator[](size_type n) const { return board[n]; }
 
 
 private:

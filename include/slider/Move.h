@@ -7,9 +7,9 @@
 #define SLIDER_MOVE_H
 
 
-enum class SliderPlayer;
+enum class SliderPlayer : char;
 
-enum class SliderMove {
+enum class SliderMove : char {
     Up, Down, Left, Right
 };
 

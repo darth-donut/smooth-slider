@@ -3,11 +3,12 @@
 // @date  : 14/11/17 10:41 PM
 //
 
-#include "Board.h"
-#include <iostream>
 #include <algorithm>
+#include <iostream>
 
-Board::Board(const std::size_t size) : size(size) {
+#include "Board.h"
+
+Board::Board(size_type size) : size(size) {
     // the board is never filled, need to let it know its size in advance
     board.resize(size);
     for (int i = 0; i != size; ++i) {
@@ -24,7 +25,7 @@ Board::reset_board() {
         std::transform(board[i].begin(),
                        board[i].end(),
                        board[i].begin(),
-                       [](SliderPiece _) { return SliderPiece::Blank; });
+                       [] (SliderPiece _) { return SliderPiece::Blank; });
         if (i != size - 1) {
             board[i][0] = SliderPiece::Horizontal;
         } else {
