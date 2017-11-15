@@ -26,7 +26,7 @@
  */
 
 enum class SliderPiece {
-    Vertical, Horizontal, Blank
+    Vertical, Horizontal, Blank, Block
 };
 
 class Board {
@@ -35,25 +35,37 @@ class Board {
 public:
     typedef std::size_t size_type;
 
+    /// Creates a board from a supplied string representation of a string
+    /// \param board string representation of a board - the size will be automatically deduced
     explicit Board(const std::string &board);
 
-    explicit Board(const std::size_t size);
+    /// Creates a board of size - size x size with initial configurations
+    /// \param size size of board ( a size x size board)
+    explicit Board(std::size_t size);
 
+    /// Makes a specified move. Returns boolean to indicate move status
+    /// \param move Move to make
+    /// \return true if move was made successfully, false otherwise
     bool make_move(const Move &move);
 
+    /// For a given move, query if it's a legal move.
+    /// \param move Move to make
+    /// \return true if the move is legal
     bool is_legal(const Move &move) const;
 
+    /// returns the size of this board
+    /// \return size of board. The dimension of the board is size x size
     size_type get_size() const { return size; }
 
 
 private:
     std::vector<std::vector<SliderPiece>> board;
+    std::size_t size;
 
 private:
     /// resets the board to the starting config
     void reset_board();
 
-    std::size_t size;
 };
 
 

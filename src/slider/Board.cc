@@ -6,6 +6,8 @@
 #include "Board.h"
 #include <iostream>
 #include <algorithm>
+#include <stdexcept>
+#include "commons/util.h"
 
 Board::Board(const std::size_t size) : size(size) {
     // the board is never filled, need to let it know its size in advance
@@ -16,6 +18,39 @@ Board::Board(const std::size_t size) : size(size) {
 
     // fill board now
     reset_board();
+}
+
+
+Board::Board(const std::string &str_board) {
+    auto rows = tokenize(str_board, '\n');
+    size = rows.size();
+    board.resize(size);
+    
+    size_type i = 0;
+    
+    for (const auto &row : rows) {
+        for (auto piece : row) {
+            switch (piece) {
+                case 'B':
+                    board[i].push_back(SliderPiece::Block);
+                    break;
+                case 'H':
+                    board[i].push_back(SliderPiece::Horizontal);
+                    break;
+                case ' ':
+                    board[i].push_back(SliderPiece::Blank);
+                    break;
+                case 'V':
+                    board[i].push_back(SliderPiece::Vertical);
+                    break;
+                default:
+                    throw std::domain_error("Unknown piece encountered!");
+            }
+        }
+        // next row, please.
+        ++i;
+    }
+
 }
 
 void
@@ -51,6 +86,8 @@ operator<<(std::ostream &os, const Board &board) {
                 case SliderPiece::Vertical:
                     c = 'V';
                     break;
+                case SliderPiece::Block:
+                    c = 'B';
             }
             buffer.push_back(c);
             buffer.push_back(' ');
