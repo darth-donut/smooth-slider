@@ -1,6 +1,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <slider/Slider.h>
+
+#include "slider/Slider.h"
 
 int
 main() {
