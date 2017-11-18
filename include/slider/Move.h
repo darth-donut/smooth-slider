@@ -8,18 +8,14 @@
 
 #include <limits>
 #include <stdexcept>
+#include "Slider.h"
+#include "slider_utils.h"
 
-enum class SliderPlayer : char;
-enum class SliderPiece : char;
-
-enum class SliderMove : char {
-    Up, Down, Left, Right
-};
 
 /// Immutable class Move
 class Move {
 public:
-    typedef std::vector<SliderPiece>::size_type size_type;
+    typedef long int size_type;
     using Coordinate = std::pair<size_type, size_type>;
 
     /// Constructs a move consisting of a player (that was responsible for this move)
@@ -54,7 +50,7 @@ public:
 private:
     SliderPlayer player;
     SliderMove move;
-    Coordinate coord{};
+    Coordinate coord;
 };
 
 Move::Coordinate
@@ -76,7 +72,7 @@ Move::apply_move() const {
     }
 
     constexpr auto max_lim = std::numeric_limits<size_type>::max();
-    if ((coord.first == 0 && x == -1)
+    if ((coord.first == -1 && x == -1)
         || (coord.second == 0 && y == -1)) {
         throw std::underflow_error("Move is underflowing from minimum allowed unsigned integer value");
     } else if ((coord.first == max_lim && x == 1)
