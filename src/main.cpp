@@ -8,7 +8,7 @@ main() {
     sf::RenderWindow window(sf::VideoMode(200, 200), "Slider");
     sf::CircleShape circle(100.f);
     circle.setFillColor(sf::Color::Magenta);
-    Slider slider(30);
+    Slider slider(7);
 
 
     while (window.isOpen()) {

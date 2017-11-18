@@ -11,9 +11,6 @@
 #include "Move.h"
 
 
-enum class SliderPlayer : char {
-    Vertical, Horizontal
-};
 
 class Slider {
 public:

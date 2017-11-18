@@ -8,3 +8,4 @@
 
 Slider::Slider(std::size_t size)
         : size(size), board(size) {}
+
