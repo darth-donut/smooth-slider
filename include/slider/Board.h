@@ -12,6 +12,7 @@
 #include <stdexcept>
 
 #include "Move.h"
+#include "slider_utils.h"
 
 /*
  * (0,0) -----------------> (N,0)
@@ -25,10 +26,6 @@
  * v                        v
  * (0, N) ----------------> (N,N)
  */
-
-enum class SliderPiece : char {
-    Vertical, Horizontal, Blank, Block
-};
 
 class Board {
     friend std::ostream &operator<<(std::ostream &, const Board &);
@@ -68,9 +65,11 @@ private:
     std::size_t size;
 
 private:
-    /// resets the board to the starting config
+    /// Resets the board to the starting config
     void reset_board();
-
+    /// Tells if the move requested by player is to slide player's piece over the board (i.e. the piece got to the goal)
+    /// \return True if the player requested a 'goal' move false otherwise
+    inline bool is_edge_move(const Move&) const;
 };
 
 

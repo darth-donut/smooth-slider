@@ -7,9 +7,10 @@
 #include <stdexcept>
 #include <iostream>
 #include <cassert>
+
+#include "Slider.h"
 #include "commons/util.h"
 
-#include "Board.h"
 
 Board::Board(size_type size) : size(size) {
     // the board is never filled, need to let it know its size in advance
@@ -27,9 +28,9 @@ Board::Board(const std::string &str_board) {
     auto rows = tokenize(str_board, '\n');
     size = rows.size();
     board.resize(size);
-    
+
     size_type i = 0;
-    
+
     for (const auto &row : rows) {
         for (auto piece : row) {
             switch (piece) {
@@ -61,7 +62,7 @@ Board::reset_board() {
         std::transform(board[i].begin(),
                        board[i].end(),
                        board[i].begin(),
-                       [] (SliderPiece _) { return SliderPiece::Blank; });
+                       [](SliderPiece _) { return SliderPiece::Blank; });
         if (i != size - 1) {
             board[i][0] = SliderPiece::Horizontal;
         } else {
@@ -104,16 +105,74 @@ operator<<(std::ostream &os, const Board &board) {
 bool
 Board::make_move(const Move &move) {
     if (is_legal(move)) {
-        auto new_coord = move.apply_move();
         auto old_x = move.get_coord().first, old_y = move.get_coord().second;
-        board[new_coord.first][new_coord.second] = board[old_x][old_y];
+        // if it wasn't an edge move, need to put a new piece
+        // at the new coordinate, otherwise it's just out of the board
+        if (!is_edge_move(move)) {
+            auto new_coord = move.apply_move();
+            board[new_coord.first][new_coord.second] = board[old_x][old_y];
+        }
         board[old_x][old_y] = SliderPiece::Blank;
         return true;
     }
     return false;
 }
 
-bool Board::is_legal(const Move &move) const {
-    // TODO!!
+bool
+Board::is_legal(const Move &move) const {
+    const auto &old_coord = move.get_coord();
+    const auto &new_coord = move.apply_move();
+    const auto &requested_move = move.get_move();
+
+    // clearly, you can't move an unmovable piece - that's ridiculous
+    if (board[old_coord.first][old_coord.second] == SliderPiece::Blank ||
+            board[old_coord.first][old_coord.second] == SliderPiece::Block) {
+        return false;
+    }
+
+    // Edge moves are always legal, if the player wasn't making an edge move, then they have to stick in the bounds.
+    if (is_edge_move(move)) {
+        return true;
+    } else if (new_coord.first < 0 || new_coord.first >= size || new_coord.second < 0 || new_coord.second >= size) {
+        // this is the glorious bounds check. Make sure it doesn't cross the board's bounds!
+        return false;
+    }
+
+    // here, we know that we can safely index board (bounds check done above)
+
+    // Can't move on a blocked space! (i.e. currently the game rules only allow you to move to
+    // spaces that has blanks)
+    if (board[new_coord.first][new_coord.second] != SliderPiece::Blank) {
+        return false;
+    }
+
+    // Next, 1. make sure that the player is allowed to make the move
+    //       2. check board's boundary conditions.
+    //          There's a condition for a player's piece to "fall over the edge of the board"
+    //          - Horizontal player reached the rightmost cell
+    //                                 OR
+    //          - Vertical player has reached the topmost cell
+    switch (move.get_player()) {
+        case SliderPlayer::Horizontal:
+            if (requested_move == SliderMove::Left) {
+                return false;
+            }
+            break;
+        case SliderPlayer::Vertical:
+            if (requested_move == SliderMove::Down) {
+                return false;
+            }
+            break;
+    }
+
+    // clear to go
+    return true;
+}
+
+bool
+Board::is_edge_move(const Move &move) const {
+    return move.get_player() == SliderPlayer::Vertical
+           ? move.apply_move().first == -1
+           : move.apply_move().second == size;
 }
 
