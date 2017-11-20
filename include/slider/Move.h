@@ -18,6 +18,8 @@ public:
     typedef long int size_type;
     using Coordinate = std::pair<size_type, size_type>;
 
+    Move() = default;
+
     /// Constructs a move consisting of a player (that was responsible for this move)
     /// and the directional move itself from specified coordinate
     /// \param player Player responsible for this move
@@ -48,8 +50,8 @@ public:
     inline Coordinate apply_move() const;
 
 private:
-    SliderPlayer player;
-    SliderMove move;
+    SliderPlayer player = SliderPlayer::Horizontal;
+    SliderMove move = SliderMove::Right;
     Coordinate coord;
 };
 

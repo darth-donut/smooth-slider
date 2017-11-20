@@ -15,7 +15,7 @@ set(SOURCE_FILES
         include/slider/Board.h
         include/slider/Move.h
         include/slider/Slider.h
-        include/commons/util.h include/slider/slider_utils.h)
+        include/commons/util.h include/slider/slider_utils.h include/commons/ai/efunc/EvaluationFunction.h)
 
 include_directories(include include/commons include/commons/ai include/slider)
 
