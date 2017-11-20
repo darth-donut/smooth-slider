@@ -9,3 +9,19 @@
 Slider::Slider(std::size_t size)
         : size(size), board(size) {}
 
+bool Slider::update(const Move &move) {
+    return false;
+}
+
+Slider Slider::peek_update(const Move &move) const {
+    return Slider(0);
+}
+
+std::vector<Move> Slider::possible_moves() const {
+    return std::vector<Move>();
+}
+
+bool Slider::is_leaf() const {
+    return false;
+}
+
