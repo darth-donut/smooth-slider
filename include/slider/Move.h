@@ -78,10 +78,25 @@ Move::apply_move() const {
         || (coord.second == 0 && y == -1)) {
         throw std::underflow_error("Move is underflowing from minimum allowed unsigned integer value");
     } else if ((coord.first == max_lim && x == 1)
-        || (coord.second == max_lim) && y == 1) {
+               || (coord.second == max_lim) && y == 1) {
         throw std::overflow_error("Move is overflowing from maximum allowed unsigned integer value");
     }
     return std::make_pair(coord.first + x, coord.second + y);
+}
+
+namespace std {
+    template<>
+    struct hash<Move::Coordinate> {
+        typedef size_t result_type;
+        typedef Move::Coordinate argument_type;
+
+        size_t operator()(const Move::Coordinate &coord) const {
+            size_t res = 17;
+            res += 31 * hash<Move::size_type>()(coord.first);
+            res += 31 * hash<Move::size_type>()(coord.second);
+            return res;
+        }
+    };
 }
 
 

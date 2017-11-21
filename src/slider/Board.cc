@@ -6,6 +6,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <iostream>
+#include <unordered_set>
 #include <cassert>
 
 #include "Slider.h"
@@ -21,6 +22,9 @@ Board::Board(size_type size) : size(size) {
 
     // fill board now
     reset_board();
+
+    // init player positions
+    initialize_piece_positions();
 }
 
 
@@ -105,6 +109,8 @@ operator<<(std::ostream &os, const Board &board) {
 bool
 Board::make_move(const Move &move) {
     if (is_legal(move)) {
+        // it's a legal move - remember to update our hashed set
+        update_piece_positions(move);
         auto old_x = move.get_coord().first, old_y = move.get_coord().second;
         // if it wasn't an edge move, need to put a new piece
         // at the new coordinate, otherwise it's just out of the board
@@ -126,7 +132,7 @@ Board::is_legal(const Move &move) const {
 
     // clearly, you can't move an unmovable piece - that's ridiculous
     if (board[old_coord.first][old_coord.second] == SliderPiece::Blank ||
-            board[old_coord.first][old_coord.second] == SliderPiece::Block) {
+        board[old_coord.first][old_coord.second] == SliderPiece::Block) {
         return false;
     }
 
@@ -169,10 +175,24 @@ Board::is_legal(const Move &move) const {
     return true;
 }
 
-bool
-Board::is_edge_move(const Move &move) const {
-    return move.get_player() == SliderPlayer::Vertical
-           ? move.apply_move().first == -1
-           : move.apply_move().second == size;
+void
+Board::initialize_piece_positions() {
+    for (auto i = 1, j = 0; i != size; ++i, ++j) {
+        // bottom-most row of board
+        vert_piece_positions.insert(std::make_pair(size - 1, i));
+        // left-most column of board
+        hori_piece_positions.insert(std::make_pair(j, 0));
+    }
 }
 
+void
+Board::update_piece_positions(const Move &move) {
+    auto &hash_set = move.get_player() == SliderPlayer::Horizontal
+                     ? hori_piece_positions
+                     : vert_piece_positions;
+    hash_set.erase(move.get_coord());
+    if (!is_edge_move(move)) {
+        // if it wasn't an edge move => the piece still remains on the board - put it(updated) back to the board
+        hash_set.insert(move.apply_move());
+    }
+}

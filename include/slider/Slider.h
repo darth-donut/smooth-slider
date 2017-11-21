@@ -7,14 +7,15 @@
 #define SLIDER_SLIDER_H
 
 #include <vector>
+#include <unordered_set>
 #include "Board.h"
 #include "Move.h"
-
+#include "slider_utils.h"
 
 
 class Slider {
 public:
-    explicit Slider(std::size_t size);
+    explicit Slider(std::size_t size, SliderPlayer player);
 
     /// updates the board according to provided move
     /// \param move Move to make
@@ -28,6 +29,7 @@ public:
     Slider peek_update(const Move &move) const;
 
     /// with the current board state, returns a vector of possible moves
+    /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
     /// \return a list of possible movements from current state
     std::vector<Move> possible_moves() const;
 
@@ -48,6 +50,14 @@ private:
     /// size x size board
     std::size_t size;
     Board board;
+    // mutable -> @see Slider::is_leaf() (temporarily 'fake' other player to see what moves the have left)
+    mutable SliderPlayer player;
+    std::vector<SliderMove> moveset{
+            SliderMove::Right,
+            SliderMove::Left,
+            SliderMove::Up,
+            SliderMove::Down
+    };
 };
 
 
