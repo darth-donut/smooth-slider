@@ -63,10 +63,7 @@ Board::Board(const std::string &str_board) {
 void
 Board::reset_board() {
     for (int i = 0; i != size; ++i) {
-        std::transform(board[i].begin(),
-                       board[i].end(),
-                       board[i].begin(),
-                       [](SliderPiece _) { return SliderPiece::Blank; });
+        std::fill(board[i].begin(), board[i].end(), SliderPiece::Blank);
         if (i != size - 1) {
             board[i][0] = SliderPiece::Horizontal;
         } else {
