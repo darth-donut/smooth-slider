@@ -18,6 +18,8 @@ public:
     typedef long int size_type;
     using Coordinate = std::pair<size_type, size_type>;
 
+    Move() = default;
+
     /// Constructs a move consisting of a player (that was responsible for this move)
     /// and the directional move itself from specified coordinate
     /// \param player Player responsible for this move
@@ -48,8 +50,8 @@ public:
     inline Coordinate apply_move() const;
 
 private:
-    SliderPlayer player;
-    SliderMove move;
+    SliderPlayer player = SliderPlayer::Horizontal;
+    SliderMove move = SliderMove::Right;
     Coordinate coord;
 };
 
@@ -76,10 +78,25 @@ Move::apply_move() const {
         || (coord.second == 0 && y == -1)) {
         throw std::underflow_error("Move is underflowing from minimum allowed unsigned integer value");
     } else if ((coord.first == max_lim && x == 1)
-        || (coord.second == max_lim) && y == 1) {
+               || (coord.second == max_lim) && y == 1) {
         throw std::overflow_error("Move is overflowing from maximum allowed unsigned integer value");
     }
     return std::make_pair(coord.first + x, coord.second + y);
+}
+
+namespace std {
+    template<>
+    struct hash<Move::Coordinate> {
+        typedef size_t result_type;
+        typedef Move::Coordinate argument_type;
+
+        size_t operator()(const Move::Coordinate &coord) const {
+            size_t res = 17;
+            res += 31 * hash<Move::size_type>()(coord.first);
+            res += 31 * hash<Move::size_type>()(coord.second);
+            return res;
+        }
+    };
 }
 
 

@@ -11,9 +11,7 @@
 template <typename T, typename State>
 class Strategy {
 public:
-    /// considers the next best move to make
-    /// \return the next best move
-    virtual T next_move(const State&) const = 0 ;
+    virtual std::pair<T, bool> next_move(const State&, double (*eval) (const State&)) const = 0 ;
 };
 
 
