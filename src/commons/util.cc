@@ -24,6 +24,7 @@ tokenize(const std::string &string, char delim, bool strip_ws) {
         string_start = it + 1;
         it = std::find(string_start, string.cend(), delim);
     }
+    tokens.emplace_back(string_start, it);
     return tokens;
 }
 

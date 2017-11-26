@@ -8,6 +8,8 @@
 
 #include <vector>
 #include <unordered_set>
+
+#include "commons/ai/agent/Minimax.h"
 #include "Board.h"
 #include "Move.h"
 #include "slider_utils.h"
@@ -30,8 +32,9 @@ public:
 
     /// with the current board state, returns a vector of possible moves
     /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
+    /// \param n Either Miniax::MAX_NODE or Minimax::Min_NODE - cheaper to find out who's turn is it [default = MAX]
     /// \return a list of possible movements from current state
-    std::vector<Move> possible_moves() const;
+    std::vector<Move> possible_moves(int n = Minimax<Move, Slider>::MAX_NODE) const;
 
 
     /// return a boolean to indicate if this state is already at its final state
@@ -53,9 +56,9 @@ public:
     /// returns the next move this player is going to make (also automatically updates the board state internally)
     /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
     /// \return Move this slider player wants to maek
-    Move next_move() const;
+    virtual Move next_move();
 
-private:
+protected:
     /// size x size board
     std::size_t size;
     Board board;
@@ -67,6 +70,11 @@ private:
             SliderMove::Up,
             SliderMove::Down
     };
+private:
+    // helper function to get the opposite player
+    SliderPlayer other_player(SliderPlayer p) const {
+        return p == SliderPlayer::Horizontal ? SliderPlayer::Vertical : SliderPlayer::Horizontal;
+    }
 };
 
 

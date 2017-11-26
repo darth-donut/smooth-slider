@@ -48,6 +48,8 @@
 					<Add directory="/home/jiahong/Documents/repository/slider/include/commons"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/commons/ai"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/slider"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/io"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -75,6 +77,8 @@
 					<Add directory="/home/jiahong/Documents/repository/slider/include/commons"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/commons/ai"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/slider"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/io"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -119,6 +123,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions/basic_eval.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/io/SliderIO.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/slider_utils.h">
 			<Option target="slider"/>
 		</Unit>
@@ -132,6 +139,9 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Slider.cc">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/io/SliderIO.cc">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/CMakeLists.txt">

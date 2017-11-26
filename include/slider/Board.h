@@ -62,9 +62,9 @@ public:
     /// \param player Which player's pieces to return
     /// \return const reference to unordered_set<Move::Coordinate> of player
     const std::unordered_set<Move::Coordinate> &get_piece_positions(SliderPlayer player) const {
-        player == SliderPlayer::Horizontal
-        ? hori_piece_positions
-        : vert_piece_positions;
+        return player == SliderPlayer::Horizontal
+               ? hori_piece_positions
+               : vert_piece_positions;
     }
 
     /// returns the winner - undefined behaviour if there's no winner. Always check with Board::has_winner before
