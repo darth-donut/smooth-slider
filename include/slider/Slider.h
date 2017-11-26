@@ -46,6 +46,15 @@ public:
     /// \return Board state
     Board &get_board() { return board; }
 
+    /// return the player of this slider state
+    /// \return player representative of this slider state
+    SliderPlayer get_player() const { return player; }
+
+    /// returns the next move this player is going to make (also automatically updates the board state internally)
+    /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
+    /// \return Move this slider player wants to maek
+    Move next_move() const;
+
 private:
     /// size x size board
     std::size_t size;

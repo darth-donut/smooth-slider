@@ -107,7 +107,16 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Move.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Referee.cc">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Referee.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Slider.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions/basic_eval.h">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/slider_utils.h">

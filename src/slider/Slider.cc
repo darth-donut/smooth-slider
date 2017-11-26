@@ -66,3 +66,8 @@ Slider::is_leaf() const {
 
 }
 
+Move Slider::next_move() const {
+    // TODO: use strategy!
+    return {};
+}
+
