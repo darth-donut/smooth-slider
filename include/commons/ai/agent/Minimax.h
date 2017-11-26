@@ -18,7 +18,8 @@
 /// \tparam T Type move. Returns this move as the best move to make given a current state
 /// \tparam State Type State. State requires the following to be defined
 /// <br>
-/// - possible_moves() - returns a vector of moves (of type T) that can be made legally from a given state
+/// - possible_moves(MIN|MAX_node) - returns a vector of moves (of type T) that can be made legally from a given state
+///                                  (and supplied min or max node - it may be expensive to find who moves in this round)
 /// <br>
 /// - peek_update() - return a new state after applying the provided move.
 /// <br>
@@ -27,6 +28,9 @@ template <typename T, typename State>
 class Minimax : public Strategy<T, State> {
 public:
     typedef size_t size_type;
+    static constexpr int MAX_NODE = 0;
+    static constexpr int MIN_NODE = 1;
+public:
     Minimax() = default;
     explicit Minimax(size_type max_depth) : max_depth(max_depth) {}
     std::pair<T, bool> next_move(const State&, double (*eval) (const State&)) const override;
@@ -46,7 +50,7 @@ Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) 
     double v = NINF;
     double alpha = NINF;
     double beta = INF;
-    auto possible_moves = state.possible_moves();
+    auto possible_moves = state.possible_moves(MAX_NODE);
     T best_move;
     if (possible_moves.size() == 0) {
         return std::make_pair(best_move, false);
@@ -71,7 +75,7 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
     }
 
     double v = NINF;
-    for (const auto &move : state.possible_moves()) {
+    for (const auto &move : state.possible_moves(MAX_NODE)) {
         v = std::max(v, minValue(state.peek_update(move), alpha, beta, depth + 1, eval));
         if (v >= beta) {
             return v;
@@ -89,7 +93,7 @@ Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_
     }
 
     double v = INF;
-    for (const auto &move : state.possible_moves()) {
+    for (const auto &move : state.possible_moves(MIN_NODE)) {
         v = std::min(v, maxValue(state.peek_update(move), alpha, beta, depth + 1, eval));
         if (v <= alpha) {
             return v;

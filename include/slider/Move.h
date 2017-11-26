@@ -8,25 +8,51 @@
 
 #include <limits>
 #include <stdexcept>
+#include <utility>
+#include <algorithm>
+#include <cctype>
+
 #include "Slider.h"
 #include "slider_utils.h"
+#include "commons/util.h"
 
+#define ALPHA_START 65      // A
+#define NUMERIC_START 48    // 0
 
 /// Immutable class Move
 class Move {
+
 public:
     typedef long int size_type;
     using Coordinate = std::pair<size_type, size_type>;
 
     Move() = default;
 
+
     /// Constructs a move consisting of a player (that was responsible for this move)
     /// and the directional move itself from specified coordinate
     /// \param player Player responsible for this move
     /// \param move Direction of type SliderMove
     /// \param coord Current coordinate
-    Move(const SliderPlayer player, SliderMove move, const Coordinate &coord)
-            : player(player), move(move), coord(coord) {}
+    Move(SliderPlayer player, SliderMove move, Coordinate coord)
+            : player(player), move(move), coord(std::move(coord)) {}
+
+    /// Constructs a move consisting of a player (that was responsible for this move)
+    /// and the directional move itself from specified coordinate from a string representation
+    /// \param user_input String representation of
+    /// \param board_size current board size, used to check for bounds
+    Move(SliderPlayer player, const std::string &user_input, size_type board_size)
+            : player(player) {
+        auto tokens = tokenize(user_input, ',');
+        if (tokens.size() != 2) {
+            throw std::domain_error(
+                    "Unrecognized number of arguments, expected <AlphabetNumeric>,<UP|DOWN|LEFT|RIGHT>");
+        }
+
+        deduce_coord(tokens[0], board_size);
+        deduce_move(tokens[1]);
+
+    }
 
     /// Gets the player that was responsible for making this move
     /// \return player that was responsible for making this move of type SliderPlayer
@@ -53,6 +79,16 @@ private:
     SliderPlayer player = SliderPlayer::Horizontal;
     SliderMove move = SliderMove::Right;
     Coordinate coord;
+
+private:
+    /// converts string representation of move into SliderMove type
+    /// \param input String type of either up, down, left, or right (case-insensitive)
+    inline void deduce_move(const std::string &input);
+
+    /// converts string representation of coordinate into Coordinate type
+    /// \param input String type of A(65) ... (65 + board_size) followed immediately by column digit (0-index)
+    /// \param board_size the current size of slider board
+    inline void deduce_coord(const std::string &input, size_type board_size);
 };
 
 Move::Coordinate
@@ -84,6 +120,49 @@ Move::apply_move() const {
     return std::make_pair(coord.first + x, coord.second + y);
 }
 
+void
+Move::deduce_move(const std::string &input) {
+    std::string str_move;
+    // canonical form = lower casing
+    std::transform(input.cbegin(), input.cend(), std::back_inserter(str_move), [](char c) { return std::tolower(c); });
+
+    if (str_move == "down") {
+        move = SliderMove::Down;
+    } else if (str_move == "up") {
+        move = SliderMove::Up;
+    } else if (str_move == "left") {
+        move = SliderMove::Left;
+    } else if (str_move == "right") {
+        move = SliderMove::Right;
+    } else {
+        throw std::domain_error("Unrecognized input " + str_move + ", expected either: (case-insensitive) up, down,"
+                " left, or right");
+    }
+}
+
+void
+Move::deduce_coord(const std::string &input, size_type board_size) {
+    if (!std::isalpha(input[0])) {
+        throw std::domain_error("Unrecognized alphabet " + std::string(1, input[0]));
+    }
+    if (!std::isdigit(input[1])) {
+        throw std::domain_error("Unrecognized numeric " + std::string(1, input[1]));
+    }
+
+    auto row = static_cast<size_type>(std::toupper(input[0])) - ALPHA_START;
+    auto col = static_cast<size_type>(input[1]) - NUMERIC_START;
+
+    // bounds check
+    if (row >= board_size) {
+        throw std::range_error("Alphabet " + std::string(1, input[0]) + " is out of range");
+    }
+    if (col >= board_size) {
+        throw std::range_error("Numeric " + std::string(1, input[2]) + " is out of range");
+    }
+
+    this->coord = std::make_pair(row, col);
+}
+
 namespace std {
     template<>
     struct hash<Move::Coordinate> {
@@ -98,6 +177,5 @@ namespace std {
         }
     };
 }
-
 
 #endif //SLIDER_MOVE_H

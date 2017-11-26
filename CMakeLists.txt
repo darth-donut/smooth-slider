@@ -15,9 +15,20 @@ set(SOURCE_FILES
         include/slider/Board.h
         include/slider/Move.h
         include/slider/Slider.h
-        include/commons/util.h include/slider/slider_utils.h)
+        include/commons/util.h
+        include/slider/slider_utils.h
+        include/slider/evaluation_functions/basic_eval.h
+        include/slider/Referee.cc
+        include/slider/Referee.h
+        src/slider/io/SliderIO.cc
+        include/slider/io/SliderIO.h)
 
-include_directories(include include/commons include/commons/ai include/slider)
+include_directories(include
+        include/commons
+        include/commons/ai
+        include/slider
+        include/slider/io
+        include/slider/evaluation_functions)
 
 add_executable(${EXE} ${SOURCE_FILES})
 

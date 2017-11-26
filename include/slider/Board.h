@@ -61,11 +61,23 @@ public:
     /// This is a O(1) operation. board.make_moves() updates this hash set automatically.
     /// \param player Which player's pieces to return
     /// \return const reference to unordered_set<Move::Coordinate> of player
-    const std::unordered_set<Move::Coordinate>& get_piece_positions(SliderPlayer player) const {
-        if (player == SliderPlayer::Horizontal)
-            return hori_piece_positions;
-        return vert_piece_positions;
+    const std::unordered_set<Move::Coordinate> &get_piece_positions(SliderPlayer player) const {
+        return player == SliderPlayer::Horizontal
+               ? hori_piece_positions
+               : vert_piece_positions;
     }
+
+    /// returns the winner - undefined behaviour if there's no winner. Always check with Board::has_winner before
+    /// calling this method
+    /// \return
+    SliderPlayer get_winner() const {
+        hori_piece_positions.empty() ? SliderPlayer::Horizontal : SliderPlayer::Vertical;
+    }
+
+    /// returns true if there's a winner. I.e. either all horizontal pieces or vertical pieces have gone over the
+    /// board.
+    /// \return  True if there's a winner - false otherwise
+    bool has_winner() const { return hori_piece_positions.empty() || vert_piece_positions.empty(); }
 
     std::vector<SliderPiece> &operator[](size_type n) { return board[n]; }
 
@@ -86,6 +98,7 @@ private:
 private:
     /// Resets the board to the starting config
     void reset_board();
+
     /// initialize the set of player positions
     void initialize_piece_positions();
 
@@ -100,7 +113,7 @@ private:
     /// updates the hash set according to move made (assues that this move is legal) it's up to the caller
     /// to make sure that the move is legal!
     /// \param move A legal move that will update internal hash set
-    void update_piece_positions(const Move& move);
+    void update_piece_positions(const Move &move);
 };
 
 
