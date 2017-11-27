@@ -21,7 +21,7 @@ set(SOURCE_FILES
         include/slider/Referee.cc
         include/slider/Referee.h
         src/slider/io/SliderIO.cc
-        include/slider/io/SliderIO.h)
+        include/slider/io/SliderIO.h src/slider/evaluation_functions/basic_eval.h.cc)
 
 include_directories(include
         include/commons

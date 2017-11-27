@@ -10,6 +10,7 @@
 #include <unordered_set>
 
 #include "commons/ai/agent/Minimax.h"
+#include "Strategy.h"
 #include "Board.h"
 #include "Move.h"
 #include "slider_utils.h"
@@ -17,7 +18,7 @@
 
 class Slider {
 public:
-    explicit Slider(std::size_t size, SliderPlayer player);
+    Slider(std::size_t size, SliderPlayer player, Strategy<Move, Slider>* strategy);
 
     /// updates the board according to provided move
     /// \param move Move to make
@@ -70,11 +71,7 @@ protected:
             SliderMove::Up,
             SliderMove::Down
     };
-private:
-    // helper function to get the opposite player
-    SliderPlayer other_player(SliderPlayer p) const {
-        return p == SliderPlayer::Horizontal ? SliderPlayer::Vertical : SliderPlayer::Horizontal;
-    }
+    Strategy<Move, Slider>* strategy;
 };
 
 

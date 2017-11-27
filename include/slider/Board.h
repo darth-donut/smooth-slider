@@ -55,7 +55,7 @@ public:
 
     /// returns the size of this board
     /// \return size of board. The dimension of the board is size x size
-    size_type get_size() const { return size; }
+    size_type size() const { return bsize; }
 
     /// returns an unordered map of coordinates in the nXn board (Coordinate style) of a given slider player.
     /// This is a O(1) operation. board.make_moves() updates this hash set automatically.
@@ -86,7 +86,7 @@ public:
 
 private:
     std::vector<std::vector<SliderPiece>> board;
-    std::size_t size;
+    std::size_t bsize;
     /// horizontal player's pieces in
     /// O(n) access instead of O(n^2) iterating the board each time
     std::unordered_set<Move::Coordinate> hori_piece_positions;
@@ -107,7 +107,7 @@ private:
     bool is_edge_move(const Move &move) const {
         return move.get_player() == SliderPlayer::Vertical
                ? move.apply_move().first == -1
-               : move.apply_move().second == size;
+               : move.apply_move().second == bsize;
     }
 
     /// updates the hash set according to move made (assues that this move is legal) it's up to the caller

@@ -13,8 +13,8 @@
 #include "commons/util.h"
 
 
-Board::Board(size_type size) : size(size) {
-    // the board is never filled, need to let it know its size in advance
+Board::Board(size_type size) : bsize(size) {
+    // the board is never filled, need to let it know its bsize in advance
     board.resize(size);
     for (int i = 0; i != size; ++i) {
         board[i].resize(size);
@@ -30,8 +30,8 @@ Board::Board(size_type size) : size(size) {
 
 Board::Board(const std::string &str_board) {
     auto rows = tokenize(str_board, '\n');
-    size = rows.size();
-    board.resize(size);
+    bsize = rows.size();
+    board.resize(bsize);
 
     size_type i = 0;
 
@@ -57,17 +57,17 @@ Board::Board(const std::string &str_board) {
         // next row, please.
         ++i;
     }
-    assert(i == size);
+    assert(i == bsize);
 }
 
 void
 Board::reset_board() {
-    for (int i = 0; i != size; ++i) {
+    for (int i = 0; i != bsize; ++i) {
         std::fill(board[i].begin(), board[i].end(), SliderPiece::Blank);
-        if (i != size - 1) {
+        if (i != bsize - 1) {
             board[i][0] = SliderPiece::Horizontal;
         } else {
-            for (int j = 1; j != size; ++j) {
+            for (int j = 1; j != bsize; ++j) {
                 board[i][j] = SliderPiece::Vertical;
             }
         }
@@ -137,7 +137,7 @@ Board::is_legal(const Move &move) const {
         // Edge moves are always legal, if the player wasn't making an edge move, then they have to stick in the bounds.
         if (is_edge_move(move)) {
             return true;
-        } else if (new_coord.first < 0 || new_coord.first >= size || new_coord.second < 0 || new_coord.second >= size) {
+        } else if (new_coord.first < 0 || new_coord.first >= bsize || new_coord.second < 0 || new_coord.second >= bsize) {
             // this is the glorious bounds check. Make sure it doesn't cross the board's bounds!
             return false;
         }
@@ -178,9 +178,9 @@ Board::is_legal(const Move &move) const {
 
 void
 Board::initialize_piece_positions() {
-    for (auto i = 1, j = 0; i != size; ++i, ++j) {
+    for (auto i = 1, j = 0; i != bsize; ++i, ++j) {
         // bottom-most row of board
-        vert_piece_positions.insert(std::make_pair(size - 1, i));
+        vert_piece_positions.insert(std::make_pair(bsize - 1, i));
         // left-most column of board
         hori_piece_positions.insert(std::make_pair(j, 0));
     }

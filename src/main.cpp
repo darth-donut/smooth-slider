@@ -14,7 +14,7 @@ main() {
 //    slider.update(Move(SliderPlayer::Horizontal, SliderMove::Right, std::make_pair(0, 0)));
 
 
-//    std::cout << slider.possible_moves().size() << std::endl;
+//    std::cout << slider.possible_moves().bsize() << std::endl;
 //    std::cout << slider.get_board() << std::endl;
 
 
@@ -35,8 +35,12 @@ main() {
 
     constexpr std::size_t board_size = 4;
 
-    Referee referee(std::make_shared<Slider>(board_size, SliderPlayer::Vertical),
-    std::shared_ptr<Slider>(new SliderIO(board_size, SliderPlayer::Horizontal)), board_size);
+    Minimax<Move, Slider> ai_strategy{8};     // depth 8
+
+    Referee referee(std::make_shared<Slider>(board_size, SliderPlayer::Vertical, &ai_strategy),
+
+                    std::shared_ptr<Slider>(new SliderIO(board_size, SliderPlayer::Horizontal)), board_size);
+
     auto winner = referee.start_game();
 
     if (!winner.second) {       // if it wasn't a draw

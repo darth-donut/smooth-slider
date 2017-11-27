@@ -16,7 +16,7 @@
 class SliderIO : public Slider {
 public:
     SliderIO(size_t size, SliderPlayer player)
-        : Slider(size, player) {}
+        : Slider(size, player, nullptr) {}
 
     Move next_move() override;
 

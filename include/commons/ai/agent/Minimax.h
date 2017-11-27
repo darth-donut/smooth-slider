@@ -24,7 +24,7 @@
 /// - peek_update() - return a new state after applying the provided move.
 /// <br>
 /// - is_leaf() - returns true if this state is a leaf state, false otherwise
-template <typename T, typename State>
+template<typename T, typename State>
 class Minimax : public Strategy<T, State> {
 public:
     typedef size_t size_type;
@@ -32,19 +32,24 @@ public:
     static constexpr int MIN_NODE = 1;
 public:
     Minimax() = default;
+
     explicit Minimax(size_type max_depth) : max_depth(max_depth) {}
-    std::pair<T, bool> next_move(const State&, double (*eval) (const State&)) const override;
+
+    std::pair<T, bool> next_move(const State &, double (*eval)(const State &)) const override;
 
 private:
-    static constexpr double INF  = std::numeric_limits<double>::max();
+    static constexpr double INF = std::numeric_limits<double>::max();
     static constexpr double NINF = std::numeric_limits<double>::min();
     size_type max_depth = std::numeric_limits<size_type>::max();
 private:
-    double maxValue(const State &state, double alpha, double beta, size_type depth ,double (*eval)(const State&)) const;
-    double minValue(const State &state, double alpha, double beta, size_type depth ,double (*eval)(const State&)) const;
+    double maxValue(const State &state, double alpha, double beta, size_type depth,
+                    double (*eval)(const State &)) const;
+
+    double minValue(const State &state, double alpha, double beta, size_type depth,
+                    double (*eval)(const State &)) const;
 };
 
-template <typename T, typename State>
+template<typename T, typename State>
 std::pair<T, bool>
 Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) const {
     double v = NINF;
@@ -67,9 +72,10 @@ Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) 
     return std::make_pair(best_move, true);
 }
 
-template <typename T, typename State>
+template<typename T, typename State>
 double
-Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_type depth, double (*eval)(const State &)) const {
+Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_type depth,
+                            double (*eval)(const State &)) const {
     if (state.is_leaf() || depth >= max_depth) {
         return eval(state);
     }
@@ -85,9 +91,10 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
     return v;
 }
 
-template <typename T, typename State>
+template<typename T, typename State>
 double
-Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_type depth, double (*eval)(const State &)) const {
+Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_type depth,
+                            double (*eval)(const State &)) const {
     if (state.is_leaf() || depth >= max_depth) {
         return eval(state);
     }

@@ -10,12 +10,14 @@
 #include "Slider.h"
 #include "commons/ai/agent/Minimax.h"
 #include "slider/evaluation_functions/basic_eval.h"
+#include "util.h"
 
 
-Slider::Slider(std::size_t size, SliderPlayer player)
+Slider::Slider(std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy)
         : size(size),
           board(size),
-          player(player) {}
+          player(player),
+          strategy(strategy) {}
 
 bool
 Slider::update(const Move &move) {
@@ -72,12 +74,14 @@ Slider::is_leaf() const {
 
 Move
 Slider::next_move() {
-    // use baseline strategy
-    Minimax<Move, Slider> strategy{9};     // max depth = 9
-    auto ret_val = strategy.next_move(*this, count_eval);
-    assert(ret_val.second);
-    // remember to update our own board!
-    update(ret_val.first);
-    return ret_val.first;
+    if (strategy) {
+        auto ret_val = strategy->next_move(*this, compound_eval);
+        assert(ret_val.second);
+        // remember to update our own board!
+        update(ret_val.first);
+        return ret_val.first;
+    } else {
+        return {};
+    }
 }
 
