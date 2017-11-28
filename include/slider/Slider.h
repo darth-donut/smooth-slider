@@ -18,7 +18,7 @@
 
 class Slider {
 public:
-    Slider(std::size_t size, SliderPlayer player, Strategy<Move, Slider>* strategy);
+    Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider>* strategy);
 
     /// updates the board according to provided move
     /// \param move Move to make
@@ -33,9 +33,8 @@ public:
 
     /// with the current board state, returns a vector of possible moves
     /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
-    /// \param n Either Miniax::MAX_NODE or Minimax::Min_NODE - cheaper to find out who's turn is it [default = MAX]
     /// \return a list of possible movements from current state
-    std::vector<Move> possible_moves(int n = Minimax<Move, Slider>::MAX_NODE) const;
+    std::vector<Move> possible_moves() const;
 
 
     /// return a boolean to indicate if this state is already at its final state
@@ -50,9 +49,13 @@ public:
     /// \return Board state
     Board &get_board() { return board; }
 
-    /// return the player of this slider state
-    /// \return player representative of this slider state
+    /// return the player of this slider state (which player's turn to move in this slider state)
+    /// \return player that makes the next turn
     SliderPlayer get_player() const { return player; }
+
+    /// return the agent of this slider game. (Who is behind this side of the board - i.e. the player)
+    /// \return player of this slider game
+    SliderPlayer get_agent() const { return agent; }
 
     /// returns the next move this player is going to make (also automatically updates the board state internally)
     /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
@@ -65,10 +68,12 @@ protected:
     Board board;
     // mutable -> @see Slider::is_leaf() (temporarily 'fake' other player to see what moves the have left)
     mutable SliderPlayer player;
+    // Which player is this agent representing (this is always a constant)
+    const SliderPlayer agent;
     std::vector<SliderMove> moveset{
             SliderMove::Right,
-            SliderMove::Left,
             SliderMove::Up,
+            SliderMove::Left,
             SliderMove::Down
     };
     Strategy<Move, Slider>* strategy;

@@ -18,7 +18,7 @@ SliderIO::next_move() {
     do {
         // print board and flush
         std::cout << decorated_board() << '\n' << "You are "
-                  << (player == SliderPlayer::Horizontal ? "Horizontal" : "Vertical")
+                  << (agent == SliderPlayer::Horizontal ? "Horizontal" : "Vertical")
                   << ", your move: ";
         // read input from user
         std::string input;

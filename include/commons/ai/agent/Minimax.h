@@ -55,7 +55,7 @@ Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) 
     double v = NINF;
     double alpha = NINF;
     double beta = INF;
-    auto possible_moves = state.possible_moves(MAX_NODE);
+    auto possible_moves = state.possible_moves();
     T best_move;
     if (possible_moves.size() == 0) {
         return std::make_pair(best_move, false);
@@ -63,7 +63,7 @@ Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) 
 
     for (const auto &move : possible_moves) {
         double v_prime = minValue(state.peek_update(move), alpha, beta, 1, eval);
-        if (v_prime >= v) {
+        if (v_prime > v) {
             v = v_prime;
             best_move = move;
         }
@@ -81,7 +81,7 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
     }
 
     double v = NINF;
-    for (const auto &move : state.possible_moves(MAX_NODE)) {
+    for (const auto &move : state.possible_moves()) {
         v = std::max(v, minValue(state.peek_update(move), alpha, beta, depth + 1, eval));
         if (v >= beta) {
             return v;
@@ -100,7 +100,7 @@ Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_
     }
 
     double v = INF;
-    for (const auto &move : state.possible_moves(MIN_NODE)) {
+    for (const auto &move : state.possible_moves()) {
         v = std::min(v, maxValue(state.peek_update(move), alpha, beta, depth + 1, eval));
         if (v <= alpha) {
             return v;

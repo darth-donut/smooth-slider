@@ -33,13 +33,21 @@ main() {
 //        window.display();
 //    }
 
-    constexpr std::size_t board_size = 4;
+    constexpr std::size_t board_size = 5;
 
-    Minimax<Move, Slider> ai_strategy{8};     // depth 8
+    Minimax<Move, Slider> ai_strategy{9};
 
-    Referee referee(std::make_shared<Slider>(board_size, SliderPlayer::Vertical, &ai_strategy),
+    Referee referee(
+            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, SliderPlayer::Horizontal, &ai_strategy),
+            std::shared_ptr<Slider>(new SliderIO(SliderPlayer::Horizontal, board_size, SliderPlayer::Horizontal)),
+            board_size);
 
-                    std::shared_ptr<Slider>(new SliderIO(board_size, SliderPlayer::Horizontal)), board_size);
+    // 2 ai battle
+//    Minimax<Move, Slider> ai_strategy2{9};
+//    Referee referee(
+//            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, SliderPlayer::Horizontal, &ai_strategy),
+//            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, SliderPlayer::Horizontal, &ai_strategy2),
+//            board_size);
 
     auto winner = referee.start_game();
 
