@@ -36,6 +36,7 @@ block_eval(const Slider &state) {
 
 double
 compound_eval(const Slider &state) {
+    // TODO: improve this
 //    auto ret_val =
 //            (state.get_board().size() - state.get_board().get_piece_positions(state.get_player()).size()) * 2.8797 *
 //            count_eval(state) + 2.11 * block_eval(state);
