@@ -8,12 +8,8 @@
 
 #include "Slider.h"
 
-double
-count_eval(const Slider &state) {
-    auto player = state.get_player();
-    auto pieces_left = state.get_board().get_piece_positions(player).size();
-    // the LESS pieces left, the better.
-    return state.get_board().get_size() - pieces_left;
-}
+double count_eval(const Slider &state);
+double block_eval(const Slider &state);
+double compound_eval(const Slider &state);
 
-#endif //SLIDER_BASIC_EVAL_H
+#endif      // SLIDER_BASIC_EVAL_H

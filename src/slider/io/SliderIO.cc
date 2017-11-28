@@ -18,13 +18,13 @@ SliderIO::next_move() {
     do {
         // print board and flush
         std::cout << decorated_board() << '\n' << "You are "
-                  << (player == SliderPlayer::Horizontal ? "Horizontal" : "Vertical")
+                  << (agent == SliderPlayer::Horizontal ? "Horizontal" : "Vertical")
                   << ", your move: ";
         // read input from user
         std::string input;
         std::cin >> input;
         try {
-            Move move(player, input, board.get_size());
+            Move move(player, input, board.size());
             if (board.is_legal(move)) {
                 // update our own board before returning valid move
                 update(move);
@@ -60,7 +60,7 @@ SliderIO::decorated_board() const {
 
     // while it's not the last newline and there's more newlines - add an alphabet right after it
     // observe, E is the last alphabet to be inserted, right before the last newline (and the last newline exists at
-    // pos = str_board.size() - 1)
+    // pos = str_board.bsize() - 1)
     for (auto pos = str_board.find('\n'); pos != str_board.size() - 1 && pos != std::string::npos; ++alpha_offset) {
         str_board.insert(pos + 1, std::string(1, static_cast<char>(ALPHA_START + alpha_offset)) + ' ');
         pos = str_board.find('\n', pos + 1);
@@ -76,7 +76,7 @@ SliderIO::decorated_board() const {
      */
 
     str_board.append("\n  ");
-    for (auto i = NUMERIC_START; i < NUMERIC_START + board.get_size(); ++i) {
+    for (auto i = NUMERIC_START; i < NUMERIC_START + board.size(); ++i) {
         str_board.push_back(static_cast<char>(i));
         str_board.push_back(' ');
     }

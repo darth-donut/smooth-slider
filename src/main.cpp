@@ -7,6 +7,7 @@
 
 int
 main() {
+    // TODO: begin SFML
 //    sf::RenderWindow window(sf::VideoMode(200, 200), "Slider");
 //    sf::CircleShape circle(100.f);
 //    circle.setFillColor(sf::Color::Magenta);
@@ -14,7 +15,7 @@ main() {
 //    slider.update(Move(SliderPlayer::Horizontal, SliderMove::Right, std::make_pair(0, 0)));
 
 
-//    std::cout << slider.possible_moves().size() << std::endl;
+//    std::cout << slider.possible_moves().bsize() << std::endl;
 //    std::cout << slider.get_board() << std::endl;
 
 
@@ -33,10 +34,22 @@ main() {
 //        window.display();
 //    }
 
-    constexpr std::size_t board_size = 4;
+    constexpr std::size_t board_size = 5;
 
-    Referee referee(std::make_shared<Slider>(board_size, SliderPlayer::Vertical),
-    std::shared_ptr<Slider>(new SliderIO(board_size, SliderPlayer::Horizontal)), board_size);
+    Minimax<Move, Slider> ai_strategy{9};
+
+    Referee referee(
+            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, SliderPlayer::Horizontal, &ai_strategy),
+            std::shared_ptr<Slider>(new SliderIO(SliderPlayer::Horizontal, board_size, SliderPlayer::Horizontal)),
+            board_size);
+
+    // 2 ai battle
+//    Minimax<Move, Slider> ai_strategy2{9};
+//    Referee referee(
+//            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, SliderPlayer::Horizontal, &ai_strategy),
+//            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, SliderPlayer::Horizontal, &ai_strategy2),
+//            board_size);
+
     auto winner = referee.start_game();
 
     if (!winner.second) {       // if it wasn't a draw

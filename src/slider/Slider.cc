@@ -10,16 +10,24 @@
 #include "Slider.h"
 #include "commons/ai/agent/Minimax.h"
 #include "slider/evaluation_functions/basic_eval.h"
+#include "util.h"
 
 
-Slider::Slider(std::size_t size, SliderPlayer player)
-        : size(size),
+Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy)
+        : agent(agent),
+          size(size),
           board(size),
-          player(player) {}
+          player(player),
+          strategy(strategy) {}
 
 bool
 Slider::update(const Move &move) {
-    return board.make_move(move);
+    auto ret = board.make_move(move);
+    // the board has been updated => the next player to move is flipped
+    if (ret) {
+        player = other_player(player);
+    }
+    return ret;
 }
 
 Slider
@@ -30,17 +38,16 @@ Slider::peek_update(const Move &move) const {
 }
 
 std::vector<Move>
-Slider::possible_moves(int n) const {
+Slider::possible_moves() const {
     std::vector<Move> potential_moves;
-    SliderPlayer p = n == Minimax<Move, Slider>::MAX_NODE ? player : other_player(player);
-    for (const auto &coord : board.get_piece_positions(p)) {
+    for (const auto &coord : board.get_piece_positions(player)) {
         for (auto move : moveset) {
-            if ((p == SliderPlayer::Vertical && move == SliderMove::Down) ||
-                (p == SliderPlayer::Horizontal && move == SliderMove::Left)) {
+            if ((player == SliderPlayer::Vertical && move == SliderMove::Down) ||
+                (player == SliderPlayer::Horizontal && move == SliderMove::Left)) {
                 // these move-sets aren't allowed!
                 continue;
             }
-            Move possible_move(p, move, coord);
+            Move possible_move(player, move, coord);
             if (board.is_legal(possible_move)) {
                 potential_moves.push_back(std::move(possible_move));
             }
@@ -72,12 +79,14 @@ Slider::is_leaf() const {
 
 Move
 Slider::next_move() {
-    // use baseline strategy
-    Minimax<Move, Slider> strategy{9};     // max depth = 9
-    auto ret_val = strategy.next_move(*this, count_eval);
-    assert(ret_val.second);
-    // remember to update our own board!
-    update(ret_val.first);
-    return ret_val.first;
+    if (strategy) {
+        auto ret_val = strategy->next_move(*this, compound_eval);
+        assert(ret_val.second);
+        // remember to update our own board!
+        update(ret_val.first);
+        return ret_val.first;
+    } else {
+        return {};
+    }
 }
 

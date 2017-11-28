@@ -24,7 +24,7 @@
 /// - peek_update() - return a new state after applying the provided move.
 /// <br>
 /// - is_leaf() - returns true if this state is a leaf state, false otherwise
-template <typename T, typename State>
+template<typename T, typename State>
 class Minimax : public Strategy<T, State> {
 public:
     typedef size_t size_type;
@@ -32,25 +32,30 @@ public:
     static constexpr int MIN_NODE = 1;
 public:
     Minimax() = default;
+
     explicit Minimax(size_type max_depth) : max_depth(max_depth) {}
-    std::pair<T, bool> next_move(const State&, double (*eval) (const State&)) const override;
+
+    std::pair<T, bool> next_move(const State &, double (*eval)(const State &)) const override;
 
 private:
-    static constexpr double INF  = std::numeric_limits<double>::max();
+    static constexpr double INF = std::numeric_limits<double>::max();
     static constexpr double NINF = std::numeric_limits<double>::min();
     size_type max_depth = std::numeric_limits<size_type>::max();
 private:
-    double maxValue(const State &state, double alpha, double beta, size_type depth ,double (*eval)(const State&)) const;
-    double minValue(const State &state, double alpha, double beta, size_type depth ,double (*eval)(const State&)) const;
+    double maxValue(const State &state, double alpha, double beta, size_type depth,
+                    double (*eval)(const State &)) const;
+
+    double minValue(const State &state, double alpha, double beta, size_type depth,
+                    double (*eval)(const State &)) const;
 };
 
-template <typename T, typename State>
+template<typename T, typename State>
 std::pair<T, bool>
 Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) const {
     double v = NINF;
     double alpha = NINF;
     double beta = INF;
-    auto possible_moves = state.possible_moves(MAX_NODE);
+    auto possible_moves = state.possible_moves();
     T best_move;
     if (possible_moves.size() == 0) {
         return std::make_pair(best_move, false);
@@ -58,7 +63,7 @@ Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) 
 
     for (const auto &move : possible_moves) {
         double v_prime = minValue(state.peek_update(move), alpha, beta, 1, eval);
-        if (v_prime >= v) {
+        if (v_prime > v) {
             v = v_prime;
             best_move = move;
         }
@@ -67,15 +72,16 @@ Minimax<T, State>::next_move(const State &state, double (*eval)(const State &)) 
     return std::make_pair(best_move, true);
 }
 
-template <typename T, typename State>
+template<typename T, typename State>
 double
-Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_type depth, double (*eval)(const State &)) const {
+Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_type depth,
+                            double (*eval)(const State &)) const {
     if (state.is_leaf() || depth >= max_depth) {
         return eval(state);
     }
 
     double v = NINF;
-    for (const auto &move : state.possible_moves(MAX_NODE)) {
+    for (const auto &move : state.possible_moves()) {
         v = std::max(v, minValue(state.peek_update(move), alpha, beta, depth + 1, eval));
         if (v >= beta) {
             return v;
@@ -85,15 +91,16 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
     return v;
 }
 
-template <typename T, typename State>
+template<typename T, typename State>
 double
-Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_type depth, double (*eval)(const State &)) const {
+Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_type depth,
+                            double (*eval)(const State &)) const {
     if (state.is_leaf() || depth >= max_depth) {
         return eval(state);
     }
 
     double v = INF;
-    for (const auto &move : state.possible_moves(MIN_NODE)) {
+    for (const auto &move : state.possible_moves()) {
         v = std::min(v, maxValue(state.peek_update(move), alpha, beta, depth + 1, eval));
         if (v <= alpha) {
             return v;

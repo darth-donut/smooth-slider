@@ -31,16 +31,16 @@ Referee::start_game() {
 void
 Referee::sanity_check() const {
     // check 1 - make sure that the players are enemies of each other
-    if (p1->get_player() == SliderPlayer::Horizontal) {
-        assert(p2->get_player() == SliderPlayer::Vertical);
+    if (p1->get_agent() == SliderPlayer::Horizontal) {
+        assert(p2->get_agent() == SliderPlayer::Vertical);
     } else {
-        assert(p2->get_player() == SliderPlayer::Horizontal);
+        assert(p2->get_agent() == SliderPlayer::Horizontal);
     }
 }
 
 std::pair<std::shared_ptr<Slider>, std::shared_ptr<Slider>>
 Referee::get_players() const {
-    return p1->get_player() == SliderPlayer::Horizontal ? std::make_pair(p1, p2) : std::make_pair(p2, p1);
+    return p1->get_agent() == SliderPlayer::Horizontal ? std::make_pair(p1, p2) : std::make_pair(p2, p1);
 }
 
 bool

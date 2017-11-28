@@ -15,8 +15,8 @@
 /// everything else is derived from Slider itself.
 class SliderIO : public Slider {
 public:
-    SliderIO(size_t size, SliderPlayer player)
-        : Slider(size, player) {}
+    SliderIO(SliderPlayer agent, size_t size, SliderPlayer player)
+        : Slider(agent, size, player, nullptr) {}
 
     Move next_move() override;
 

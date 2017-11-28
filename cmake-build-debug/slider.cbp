@@ -141,6 +141,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Slider.cc">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.h.cc">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/io/SliderIO.cc">
 			<Option target="slider"/>
 		</Unit>
