@@ -158,12 +158,14 @@ Board::is_legal(const Move &move) const {
         //          - Vertical player has reached the topmost cell
         switch (move.get_player()) {
             case SliderPlayer::Horizontal:
-                if (requested_move == SliderMove::Left) {
+                if (board[old_coord.first][old_coord.second] != SliderPiece::Horizontal
+                    || requested_move == SliderMove::Left) {
                     return false;
                 }
                 break;
             case SliderPlayer::Vertical:
-                if (requested_move == SliderMove::Down) {
+                if (board[old_coord.first][old_coord.second] != SliderPiece::Vertical
+                    || requested_move == SliderMove::Down) {
                     return false;
                 }
                 break;
