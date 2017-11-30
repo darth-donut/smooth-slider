@@ -11,7 +11,9 @@
 template <typename T, typename State>
 class Strategy {
 public:
-    virtual std::pair<T, bool> next_move(const State&, double (*eval) (const State&)) const = 0 ;
+    // evaluation function should return a double, and take a const ref to state, with additional param for depth
+    typedef double evalf (const State&, size_t);
+    virtual std::pair<T, bool> next_move(const State&, evalf) const = 0 ;
 };
 
 

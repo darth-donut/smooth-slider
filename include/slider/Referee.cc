@@ -36,11 +36,13 @@ Referee::sanity_check() const {
     } else {
         assert(p2->get_agent() == SliderPlayer::Horizontal);
     }
+    // check 2 - make sure that the 1st player is consistent
+    assert(p1->get_player() == p2->get_player());
 }
 
 std::pair<std::shared_ptr<Slider>, std::shared_ptr<Slider>>
 Referee::get_players() const {
-    return p1->get_agent() == SliderPlayer::Horizontal ? std::make_pair(p1, p2) : std::make_pair(p2, p1);
+    return p1->get_agent() == p1->get_player() ? std::make_pair(p1, p2) : std::make_pair(p2, p1);
 }
 
 bool
