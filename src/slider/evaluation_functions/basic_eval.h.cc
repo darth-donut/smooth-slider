@@ -41,5 +41,5 @@ compound_eval(const Slider &state, size_t depth) {
 //            (state.get_board().size() - state.get_board().get_piece_positions(state.get_player()).size()) * 2.8797 *
 //            count_eval(state) + 2.11 * block_eval(state);
     auto ret_val = count_eval(state, depth);
-    return ret_val;
+    return (1 - (depth * 1.0) / (depth + 1)) * ret_val;
 }
