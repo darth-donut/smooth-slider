@@ -138,9 +138,6 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Board.cpp">
 			<Option target="slider"/>
 		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Move.cpp">
-			<Option target="slider"/>
-		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Referee.cpp">
 			<Option target="slider"/>
 		</Unit>

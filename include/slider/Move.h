@@ -11,6 +11,7 @@
 #include <utility>
 #include <algorithm>
 #include <cctype>
+#include <iostream>
 
 #include "slider_utils.h"
 #include "commons/util.h"
@@ -64,9 +65,9 @@ public:
             throw std::domain_error("Can't move more than a step in one turn");
         }
         if ((init.first > final.first) && (init.second == final.second)) {
-            move = SliderMove::Down;
-        } else if ((init.first < final.first) && (init.second == final.second)) {
             move = SliderMove::Up;
+        } else if ((init.first < final.first) && (init.second == final.second)) {
+            move = SliderMove::Down;
         } else if ((init.second > final.second) && (init.first == final.first)) {
             move = SliderMove::Left;
         } else if ((init.second < final.second) && (init.first == final.first)) {
@@ -200,5 +201,27 @@ namespace std {
     };
 }
 
+
+inline std::ostream
+&operator<<(std::ostream &os, const Move &move) {
+    std::string p = (move.player == SliderPlayer::Horizontal) ? "Hori" : "Vert";
+    std::string m;
+    switch (move.move) {
+        case SliderMove::Up:
+            m = "up";
+            break;
+        case SliderMove::Down:
+            m = "down";
+            break;
+        case SliderMove::Right:
+            m = "right";
+            break;
+        case SliderMove::Left:
+            m = "left";
+            break;
+    }
+    return os << p << " making move: " << m << " from coord: " << move.coord.first
+              << ", " << move.coord.second;
+}
 
 #endif //SLIDER_MOVE_H

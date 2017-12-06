@@ -24,8 +24,7 @@ set(SOURCE_FILES
         include/slider/io/SliderIO.h
         src/slider/evaluation_functions/basic_eval.h.cpp
         src/slider/gui/SliderGUI.cpp
-        include/slider/gui/SliderGUI.h
-        src/slider/Move.cpp)
+        include/slider/gui/SliderGUI.h)
 
 include_directories(include
         include/commons

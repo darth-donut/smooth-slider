@@ -30,12 +30,12 @@ SliderGUI::next_move() {
     } else {
 //        std::cout << "up: " << x << ", " << y << std::endl;
         if (accept_mouse_response) {
+            accept_mouse_response = false;
             try {
                 Move move(agent, board_to_vector(mouse_clk_pos), board_to_vector(Move::Coordinate(x, y)), board.size());
                 if (board.is_legal(move)) {
                     ready = true;
                     std::cout << "Move accepted: " << std::endl;
-                    accept_mouse_response = false;
                     update(move);
                     return move;
                 } else {
