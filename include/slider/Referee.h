@@ -26,6 +26,10 @@ public:
     /// \return
     std::pair<SliderPlayer, bool> start_game();
 
+    /// returns a const reference to internal board maintained by referee
+    /// \return Const ref to class Board
+    const Board& get_board() const { return slider_board; }
+
 private:
     std::shared_ptr<Slider> p1;
     std::shared_ptr<Slider> p2;
