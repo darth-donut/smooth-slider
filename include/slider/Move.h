@@ -12,7 +12,6 @@
 #include <algorithm>
 #include <cctype>
 
-#include "Slider.h"
 #include "slider_utils.h"
 #include "commons/util.h"
 
@@ -21,6 +20,7 @@
 
 /// Immutable class Move
 class Move {
+    friend std::ostream &operator<<(std::ostream &os, const Move &move);
 
 public:
     typedef long int size_type;
@@ -52,6 +52,28 @@ public:
         deduce_coord(tokens[0], board_size);
         deduce_move(tokens[1]);
 
+    }
+
+    Move(SliderPlayer player, Coordinate init, Coordinate final, size_type board_size)
+            : player(player), coord(init) {
+        if (init.first < 0 || init.first >= board_size || final.first < 0 || final.first > board_size
+            || init.second < 0 || init.second >= board_size || final.second < 0 || final.second > board_size) {
+            throw std::domain_error("Move not allowed");
+        }
+        if (std::abs(init.first - final.first) > 1 || std::abs(init.second - final.second) > 1) {
+            throw std::domain_error("Can't move more than a step in one turn");
+        }
+        if ((init.first > final.first) && (init.second == final.second)) {
+            move = SliderMove::Down;
+        } else if ((init.first < final.first) && (init.second == final.second)) {
+            move = SliderMove::Up;
+        } else if ((init.second > final.second) && (init.first == final.first)) {
+            move = SliderMove::Left;
+        } else if ((init.second < final.second) && (init.first == final.first)) {
+            move = SliderMove::Right;
+        } else {
+            throw std::domain_error("Move not allowed");
+        }
     }
 
     /// Gets the player that was responsible for making this move
@@ -177,5 +199,6 @@ namespace std {
         }
     };
 }
+
 
 #endif //SLIDER_MOVE_H

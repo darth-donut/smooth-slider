@@ -123,6 +123,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions/basic_eval.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/gui/SliderGUI.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/io/SliderIO.h">
 			<Option target="slider"/>
 		</Unit>
@@ -138,10 +141,16 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Board.cc">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Move.cc">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Slider.cc">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.h.cc">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/SliderGUI.cc">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/io/SliderIO.cc">
