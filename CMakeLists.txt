@@ -7,9 +7,9 @@ set(EXE slider)
 # set src/header
 set(SOURCE_FILES
         src/main.cpp
-        src/slider/Slider.cc
-        src/slider/Board.cc
-        src/commons/util.cc
+        src/slider/Slider.cpp
+        src/slider/Board.cpp
+        src/commons/util.cpp
         include/commons/ai/agent/Minimax.h
         include/commons/ai/Strategy.h
         include/slider/Board.h
@@ -18,10 +18,14 @@ set(SOURCE_FILES
         include/commons/util.h
         include/slider/slider_utils.h
         include/slider/evaluation_functions/basic_eval.h
-        include/slider/Referee.cc
+        src/slider/Referee.cpp
         include/slider/Referee.h
-        src/slider/io/SliderIO.cc
-        include/slider/io/SliderIO.h src/slider/evaluation_functions/basic_eval.h.cc src/slider/gui/SliderGUI.cc include/slider/gui/SliderGUI.h src/slider/Move.cc)
+        src/slider/io/SliderIO.cpp
+        include/slider/io/SliderIO.h
+        src/slider/evaluation_functions/basic_eval.h.cpp
+        src/slider/gui/SliderGUI.cpp
+        include/slider/gui/SliderGUI.h
+        src/slider/Move.cpp)
 
 include_directories(include
         include/commons
