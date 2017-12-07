@@ -125,6 +125,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/gui/SliderGUI.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/gui/slider_render_window.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/io/SliderIO.h">
 			<Option target="slider"/>
 		</Unit>
@@ -150,6 +153,9 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/SliderGUI.cpp">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/slider_render_window.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/io/SliderIO.cpp">

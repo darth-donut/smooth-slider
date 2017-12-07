@@ -4,6 +4,7 @@
 //
 
 #include <SFML/Window/Event.hpp>
+#include<cassert>
 
 #include "slider/gui/SliderGUI.h"
 #include "Board.h"
@@ -42,14 +43,22 @@ SliderGUI::next_move() {
                     update(move);
                     return move;
                 } else {
-                    std::cout << "Move illegal!" << std::endl;
+                    Move m;
+                    m.error("Illegal move, Try again!");
+                    return m;
                 }
             } catch (const std::exception& e) {
-                // todo
-                std::cout << "Move illegal!: " << e.what() << std::endl;
+                Move m;
+                m.error("Illegal move: " + std::string(e.what()) + "!");
+                return m;
             }
         }
     }
+    // return default move if user doesn't supply any input - this is a safe operation because
+    // ready is still set to false unless user supplied a legal move & we made sure to call
+    // is_ready() in Referee.cpp
+    assert(!ready);
+    return Move();
 }
 
 bool

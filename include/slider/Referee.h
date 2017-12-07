@@ -10,6 +10,7 @@
 #include <utility>
 #include <memory>
 #include <SFML/Graphics/RenderWindow.hpp>
+#include <slider/gui/slider_render_window.h>
 
 #include "Slider.h"
 
@@ -20,7 +21,7 @@ public:
               p2(std::move(p2)),
               slider_board(n) { sanity_check(); }
 
-    Referee(std::shared_ptr<Slider> p1, std::shared_ptr<Slider> p2, Board::size_type n, sf::RenderWindow *window)
+    Referee(std::shared_ptr<Slider> p1, std::shared_ptr<Slider> p2, Board::size_type n, SliderRenderWindow *window)
             : p1(std::move(p1)),
               p2(std::move(p2)),
               slider_board(n),
@@ -56,7 +57,7 @@ private:
     std::shared_ptr<Slider> p1;
     std::shared_ptr<Slider> p2;
     Board slider_board;
-    sf::RenderWindow *window = nullptr;
+    SliderRenderWindow *window = nullptr;
     std::shared_ptr<Slider> current_player;
     std::shared_ptr<Slider> other_player;
 private:

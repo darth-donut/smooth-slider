@@ -24,7 +24,7 @@ set(SOURCE_FILES
         src/slider/gui/SliderGUI.cpp
         src/slider/io/SliderIO.cpp
         src/slider/Referee.cpp
-        src/slider/Slider.cpp)
+        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h)
 
 include_directories(include/
         include/commons

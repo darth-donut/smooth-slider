@@ -12,6 +12,7 @@
 #include <algorithm>
 #include <cctype>
 #include <iostream>
+#include <string>
 
 #include "slider_utils.h"
 #include "commons/util.h"
@@ -98,10 +99,34 @@ public:
     /// \return New Coordinate after move is applied to original coordinate. Under/overflow exceptions otherwise
     inline Coordinate apply_move() const;
 
+    /// sets this move as a bad move - i.e. this Move can be returned to indicate that a user has
+    /// given us a bad input
+    /// \param msg Error message
+    void error(const std::string& msg) {
+        bad_move = true;
+        err_msg = msg;
+    }
+
+    /// returns true if this move is a bad move (i.e. user has supplied an illegal move)
+    /// \return
+    bool is_bad_move() { return bad_move; }
+
+    /// Returns the associated error message with bad_move
+    /// \return std::string
+    const std::string& get_err_msg() const { return err_msg; }
+
+    /// Returns the associated error message with bad_move
+    /// \return std::string
+    std::string get_err_msg() { return err_msg; }
+
 private:
     SliderPlayer player = SliderPlayer::Horizontal;
     SliderMove move = SliderMove::Right;
     Coordinate coord;
+    // this will be true if next_move() of Slider wants to indicate an error.
+    // this is mostly used when depending on user input (our slider AI never returns an illegal move)
+    bool bad_move = false;
+    std::string err_msg;
 
 private:
     /// converts string representation of move into SliderMove type

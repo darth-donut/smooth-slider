@@ -13,7 +13,8 @@
 
 #define BOX_SIZE 50
 #define WIDTH_PAD 0.3f
-#define HEIGHT_PAD 0.1f
+#define HEIGHT_PAD 0.17f
+#define ERR_TEXT_SIZE 28
 
 class SliderGUI : public Slider {
 public:

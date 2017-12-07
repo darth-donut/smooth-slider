@@ -2,6 +2,7 @@
 #include <SFML/Graphics.hpp>
 #include <slider/io/SliderIO.h>
 #include <slider/gui/SliderGUI.h>
+#include <slider/gui/slider_render_window.h>
 
 #include "slider/Referee.h"
 
@@ -14,7 +15,7 @@ main() {
 
 #if SLIDER_GUI_TOGG
     // GUI interface
-    sf::RenderWindow window(sf::VideoMode(800, 550), "Slider");
+    SliderRenderWindow window(sf::VideoMode(800, 550), "Slider");
     Minimax<Move, Slider> ai_strategy{9};
 
     Referee referee(

@@ -7,6 +7,7 @@
 #include <iostream>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
+#include <SFML/Graphics/Text.hpp>
 
 #include "Referee.h"
 #include "SliderGUI.h"
@@ -61,7 +62,6 @@ void
 Referee::update() {
     if (window->isOpen()) {
         window->clear();
-
         using std::swap;
 
         if (!slider_board.has_winner() && !draw_game()) {
@@ -72,10 +72,18 @@ Referee::update() {
                 // inform other player that we've updated the board
                 other_player->update(pending_move);
                 swap(current_player, other_player);
+                // there maybe an error message saying "illegal move! from the prev frame"
+                // tell window that we don't need that anymore
+                window->display_error(false);
+            } else {
+                if (pending_move.is_bad_move()) {
+                    // explicitly tell window to display error message associated with the bad move
+                    window->err_msg(pending_move.get_err_msg());
+                }  // else, it means user hasn't specified any kind of input
             }
         }
         draw_gui();
-        window->display();
+        window->disp();
     }
 }
 
