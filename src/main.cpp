@@ -5,15 +5,17 @@
 
 #include "slider/Referee.h"
 
+#define SLIDER_GUI_TOGG 1
 
 int
 main() {
-
-    sf::RenderWindow window(sf::VideoMode(800, 550), "Slider");
-
     constexpr std::size_t board_size = 7;
-    Minimax<Move, Slider> ai_strategy{9};
     SliderPlayer starting_player = SliderPlayer::Horizontal;
+
+#if SLIDER_GUI_TOGG
+    // GUI interface
+    sf::RenderWindow window(sf::VideoMode(800, 550), "Slider");
+    Minimax<Move, Slider> ai_strategy{9};
 
     Referee referee(
             std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy),
@@ -21,9 +23,7 @@ main() {
             board_size,
             &window);
 
-//    auto winner = referee.start_game();
     while (window.isOpen()) {
-
         sf::Event event;
         while (window.pollEvent(event)) {
             switch (event.type) {
@@ -34,22 +34,26 @@ main() {
         }
         referee.update();
     }
+#else
+    // CMD interface
 
+    // Battle between 2 AI - use std::make_shared<Slider>(new SliderIO ... )
+    // for human CMD interaction instead
+    Minimax<Move, Slider> ai_strategy1{7};
+    Minimax<Move, Slider> ai_strategy2{6};
+    Referee referee(
+            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1),
+            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2),
+            board_size);
 
-    // 2 ai battle
-//    Minimax<Move, Slider> ai_strategy2{9};
-//    Referee referee(
-//            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy),
-//            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2),
-//            board_size);
-//
-//    auto winner = referee.start_game();
-//
-//    if (!winner.second) {       // if it wasn't a draw
-//        std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
-//    } else {
-//        std::cout << "The game ended in a draw!\n";
-//    }
+    auto winner = referee.start_game(true);
 
+    if (!winner.second) {       // if it wasn't a draw
+        std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
+    } else {
+        std::cout << "The game ended in a draw!\n";
+    }
+
+#endif
     return 0;
 }

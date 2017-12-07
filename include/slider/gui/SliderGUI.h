@@ -11,6 +11,10 @@
 #include "slider/Slider.h"
 #include "Board.h"
 
+#define BOX_SIZE 50
+#define WIDTH_PAD 0.3f
+#define HEIGHT_PAD 0.1f
+
 class SliderGUI : public Slider {
 public:
     SliderGUI(SliderPlayer agent,
@@ -25,6 +29,9 @@ private:
     Move::Coordinate mouse_clk_pos;
     bool accept_mouse_response = false;
     bool ready = false;
+
+private:
+    inline bool player_piece_clicked(Board::size_type x, Board::size_type y) const;
 };
 
 

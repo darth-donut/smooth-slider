@@ -4,13 +4,15 @@
 //
 
 #include <cassert>
+#include <iostream>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 
 #include "Referee.h"
+#include "SliderGUI.h"
 
 std::pair<SliderPlayer, bool>
-Referee::start_game() {
+Referee::start_game(bool disp_interm) {
     using std::swap;
     // current_player is the player that has to make the move this round
     // other_player is the 'other" player that made its move in the previous round
@@ -25,6 +27,9 @@ Referee::start_game() {
         // inform other player that we've updated the board
         other_player->update(pending_move);
         swap(current_player, other_player);
+        if (disp_interm) {
+            std::cout << slider_board  << std::endl;
+        }
     }
 
     return std::make_pair(slider_board.get_winner(), draw_game());
@@ -76,14 +81,9 @@ Referee::update() {
 
 void
 Referee::draw_gui() {
-    constexpr float box_size = 50.f;
-    const float width = window->getSize().x;
-    const float height = window->getSize().y;
-    float width_padding = width * 3.0f / 10;
-    float height_padding = height * 1.0f / 10;
-    float x = width_padding;
-    float y = height_padding;
-
+    constexpr float box_size = BOX_SIZE;
+    const float x = window->getSize().x * WIDTH_PAD;
+    const float y = window->getSize().y  * HEIGHT_PAD;
     for (size_t i = 0; i != slider_board.size(); ++i) {
         for (size_t j = 0; j != slider_board.size(); ++j) {
             sf::Vector2f pos(x + i * box_size, y + j * box_size);
@@ -95,7 +95,6 @@ Referee::draw_gui() {
                 box.setFillColor(sf::Color::White);
             }
             window->draw(box);
-
             // draw board piece if there is one (incl blocks)
             sf::CircleShape piece(box_size / 3, 7);
             piece.setOrigin(box_size / 3, box_size / 3);
