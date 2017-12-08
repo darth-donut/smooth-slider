@@ -24,7 +24,7 @@ SliderIO::next_move() {
         std::string input;
         std::cin >> input;
         try {
-            Move move(player, input, board.size());
+            Move move(agent, input, board.size());
             if (board.is_legal(move)) {
                 // update our own board before returning valid move
                 update(move);

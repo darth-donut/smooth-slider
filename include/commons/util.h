@@ -24,4 +24,9 @@ inline SliderPlayer other_player(SliderPlayer p) {
 }
 
 
+inline std::pair<size_t, size_t>
+board_to_vector(const std::pair<size_t, size_t> board_coord) {
+    return std::make_pair(board_coord.second, board_coord.first);
+}
+
 #endif //SLIDER_UTIL_H

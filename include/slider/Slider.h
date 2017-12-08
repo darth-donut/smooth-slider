@@ -62,6 +62,11 @@ public:
     /// \return Move this slider player wants to maek
     virtual Move next_move();
 
+    /// returns true if player is ready to move. This is only ever meaningful when Slider is
+    /// a non-AI based agent
+    /// \return true if this player is ready to make a move, defaults to true
+    virtual bool ready_to_move() { return true; }
+
 protected:
     /// size x size board
     std::size_t size;

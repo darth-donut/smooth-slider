@@ -7,7 +7,7 @@
 #include <cmath>
 
 double
-count_eval(const Slider &state) {
+count_eval(const Slider &state, size_t depth) {
     auto agent = state.get_agent();
     auto pieces_left = state.get_board().get_piece_positions(agent).size();
     // the LESS pieces left, the better.
@@ -16,7 +16,7 @@ count_eval(const Slider &state) {
 
 
 double
-block_eval(const Slider &state) {
+block_eval(const Slider &state, size_t depth) {
     double player_moves_left = state.possible_moves().size();
     double opponent_moves_left = state.possible_moves().size();
     // each piece can go 3 direction AT MOST
@@ -35,11 +35,11 @@ block_eval(const Slider &state) {
 }
 
 double
-compound_eval(const Slider &state) {
+compound_eval(const Slider &state, size_t depth) {
     // TODO: improve this
 //    auto ret_val =
 //            (state.get_board().size() - state.get_board().get_piece_positions(state.get_player()).size()) * 2.8797 *
 //            count_eval(state) + 2.11 * block_eval(state);
-    auto ret_val = count_eval(state);
-    return ret_val;
+    auto ret_val = count_eval(state, depth);
+    return (1 - (depth * 1.0) / (depth + 1)) * ret_val;
 }

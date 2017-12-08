@@ -6,29 +6,33 @@ set(EXE slider)
 
 # set src/header
 set(SOURCE_FILES
-        src/main.cpp
-        src/slider/Slider.cc
-        src/slider/Board.cc
-        src/commons/util.cc
         include/commons/ai/agent/Minimax.h
         include/commons/ai/Strategy.h
-        include/slider/Board.h
-        include/slider/Move.h
-        include/slider/Slider.h
         include/commons/util.h
-        include/slider/slider_utils.h
+        include/slider/Board.h
         include/slider/evaluation_functions/basic_eval.h
-        include/slider/Referee.cc
+        include/slider/gui/SliderGUI.h
+        include/slider/io/SliderIO.h
+        include/slider/Move.h
         include/slider/Referee.h
-        src/slider/io/SliderIO.cc
-        include/slider/io/SliderIO.h src/slider/evaluation_functions/basic_eval.h.cc)
+        include/slider/Slider.h
+        include/slider/slider_utils.h
+        src/commons/util.cpp
+        src/main.cpp
+        src/slider/Board.cpp
+        src/slider/evaluation_functions/basic_eval.h.cpp
+        src/slider/gui/SliderGUI.cpp
+        src/slider/io/SliderIO.cpp
+        src/slider/Referee.cpp
+        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h)
 
-include_directories(include
+include_directories(include/
         include/commons
         include/commons/ai
         include/slider
-        include/slider/io
-        include/slider/evaluation_functions)
+        include/slider/evaluation_functions
+        include/slider/gui
+        include/slider/io)
 
 add_executable(${EXE} ${SOURCE_FILES})
 
