@@ -77,16 +77,16 @@ Slider::is_leaf() const {
 
 }
 
-Move
-Slider::next_move() {
+void
+Slider::next_move(Move &move) {
     if (strategy) {
         auto ret_val = strategy->next_move(*this, compound_eval);
         assert(ret_val.second);
         // remember to update our own board!
         update(ret_val.first);
-        return ret_val.first;
+        move = ret_val.first;
     } else {
-        return {};
+        move.error("Strategy not set");
     }
 }
 

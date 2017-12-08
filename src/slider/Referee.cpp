@@ -22,7 +22,8 @@ Referee::start_game(bool disp_interm) {
     auto other_player = tmp.second;
 
     while (!slider_board.has_winner() && !draw_game()) {
-        auto pending_move = current_player->next_move();
+        Move pending_move;
+        current_player->next_move(pending_move);
         // we can be 100% sure it's a legal move because next_move() of slider always checks for illegal moves.
         slider_board.make_move(pending_move);
         // inform other player that we've updated the board
@@ -65,7 +66,8 @@ Referee::update() {
         using std::swap;
 
         if (!slider_board.has_winner() && !draw_game()) {
-            auto pending_move = current_player->next_move();
+            Move pending_move;
+            current_player->next_move(pending_move);
             if (current_player->ready_to_move()) {
                 // we can be 100% sure it's a legal move because next_move() of slider always checks for illegal moves.
                 slider_board.make_move(pending_move);

@@ -22,7 +22,7 @@ public:
               size_t size,
               SliderPlayer player, const sf::RenderWindow&);
 
-    Move next_move() override;
+    void next_move(Move &move) override;
     bool ready_to_move() override { return ready; };
 
 private:

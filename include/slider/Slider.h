@@ -57,10 +57,10 @@ public:
     /// \return player of this slider game
     SliderPlayer get_agent() const { return agent; }
 
-    /// returns the next move this player is going to make (also automatically updates the board state internally)
+    /// next move this player is going to make (also automatically updates the board state internally)
     /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
-    /// \return Move this slider player wants to maek
-    virtual Move next_move();
+    /// \param move this slider player wants to make
+    virtual void next_move(Move& move);
 
     /// returns true if player is ready to move. This is only ever meaningful when Slider is
     /// a non-AI based agent
