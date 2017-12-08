@@ -1,4 +1,5 @@
 #include <iostream>
+#include <thread>
 #include <SFML/Graphics.hpp>
 
 #include "slider/gui/slider_render_window.h"
@@ -6,7 +7,10 @@
 #include "slider/gui/SliderGUI.h"
 #include "slider/Referee.h"
 
-#define SLIDER_GUI_TOGG 1
+#define SLIDER_GUI_TOGG 0
+
+void play_games(std::size_t board_size, SliderPlayer starting_player);
+
 
 int
 main() {
@@ -40,6 +44,22 @@ main() {
 
     // Battle between 2 AI - use std::make_shared<Slider>(new SliderIO ... )
     // for human CMD interaction instead
+    constexpr int ngames = 10;
+    std::thread games[ngames];
+
+    for (auto &game : games) {
+        game = std::thread(play_games, board_size, starting_player);
+    }
+    for (auto &game : games) {
+        game.join();
+    }
+
+#endif
+    return 0;
+}
+
+void
+play_games(std::size_t board_size, SliderPlayer starting_player) {
     Minimax<Move, Slider> ai_strategy1{4};
     Minimax<Move, Slider> ai_strategy2{5};
     Referee referee(
@@ -47,14 +67,11 @@ main() {
             std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2),
             board_size);
 
-    auto winner = referee.start_game(true);
-
+    auto winner = referee.start_game();
     if (!winner.second) {       // if it wasn't a draw
         std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
     } else {
         std::cout << "The game ended in a draw!\n";
     }
-
-#endif
-    return 0;
 }
+

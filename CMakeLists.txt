@@ -41,4 +41,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 1.6 REQUIRED system window graphics network audio)
 target_link_libraries(${EXE} ${SFML_LIBRARIES})
 
+# Multithreading
+find_package(Threads REQUIRED)
+target_link_libraries(${EXE} ${CMAKE_THREAD_LIBS_INIT})
+
 set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3")

@@ -59,11 +59,11 @@ public:
 
     /// returns statistics for player 1
     /// \return std::vector of moves that player 1 has made throughout the entire game
-    const std::vector<Move>& get_p1_stats() const { return player1_stats; }
+    const std::vector<Move> &get_p1_stats() const { return player1_stats; }
 
     /// returns statistics for player 2
     /// \return std::vector of moves that player 2 has made throughout the entire game
-    const std::vector<Move>& get_p2_stats() const { return player2_stats; }
+    const std::vector<Move> &get_p2_stats() const { return player2_stats; }
 
 private:
     const std::shared_ptr<Slider> p1;
@@ -85,7 +85,7 @@ private:
 
     void draw_gui();
 
-    void gather_statistics(const Move& move);
+    void gather_statistics(const Move &move);
 };
 
 
