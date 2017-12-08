@@ -1,9 +1,9 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include <slider/io/SliderIO.h>
-#include <slider/gui/SliderGUI.h>
-#include <slider/gui/slider_render_window.h>
 
+#include "slider/gui/slider_render_window.h"
+#include "slider/io/SliderIO.h"
+#include "slider/gui/SliderGUI.h"
 #include "slider/Referee.h"
 
 #define SLIDER_GUI_TOGG 1
@@ -40,8 +40,8 @@ main() {
 
     // Battle between 2 AI - use std::make_shared<Slider>(new SliderIO ... )
     // for human CMD interaction instead
-    Minimax<Move, Slider> ai_strategy1{7};
-    Minimax<Move, Slider> ai_strategy2{6};
+    Minimax<Move, Slider> ai_strategy1{4};
+    Minimax<Move, Slider> ai_strategy2{5};
     Referee referee(
             std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1),
             std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2),

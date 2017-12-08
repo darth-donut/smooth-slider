@@ -13,12 +13,15 @@
 #include <cctype>
 #include <iostream>
 #include <string>
+#include <memory>
 
 #include "slider_utils.h"
 #include "commons/util.h"
 
 #define ALPHA_START 65      // A
 #define NUMERIC_START 48    // 0
+
+class Slider;
 
 /// Immutable class Move
 class Move {
@@ -119,6 +122,13 @@ public:
     /// \return std::string
     std::string get_err_msg() { return err_msg; }
 
+    /// adds metadata for this move made by player. Typically used for TDLeaf lambda to collect information
+    /// about the principal variation node and the evaluation score of the leaf node
+    /// \param data std::pair of std::shared_ptr<Slider> and double (principal var node, eval score)
+    void add_metadata(const std::pair<std::shared_ptr<Slider>, double>& data) { metadata = data; }
+
+    const std::pair<std::shared_ptr<Slider>, double> get_metadata() const { return metadata; }
+
 private:
     SliderPlayer player = SliderPlayer::Horizontal;
     SliderMove move = SliderMove::Right;
@@ -127,7 +137,7 @@ private:
     // this is mostly used when depending on user input (our slider AI never returns an illegal move)
     bool bad_move = false;
     std::string err_msg;
-
+    std::pair<std::shared_ptr<Slider>, double> metadata;
 private:
     /// converts string representation of move into SliderMove type
     /// \param input String type of either up, down, left, or right (case-insensitive)

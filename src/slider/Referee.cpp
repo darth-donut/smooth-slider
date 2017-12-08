@@ -15,15 +15,10 @@
 std::pair<SliderPlayer, bool>
 Referee::start_game(bool disp_interm) {
     using std::swap;
-    // current_player is the player that has to make the move this round
-    // other_player is the 'other" player that made its move in the previous round
-    auto tmp = get_players();
-    auto current_player = tmp.first;
-    auto other_player = tmp.second;
-
     while (!slider_board.has_winner() && !draw_game()) {
         Move pending_move;
         current_player->next_move(pending_move);
+        gather_statistics(pending_move);
         // we can be 100% sure it's a legal move because next_move() of slider always checks for illegal moves.
         slider_board.make_move(pending_move);
         // inform other player that we've updated the board
@@ -33,12 +28,11 @@ Referee::start_game(bool disp_interm) {
             std::cout << slider_board  << std::endl;
         }
     }
-
     return std::make_pair(slider_board.get_winner(), draw_game());
 }
 
 void
-Referee::sanity_check() const {
+Referee::assign_players() {
     // check 1 - make sure that the players are enemies of each other
     if (p1->get_agent() == SliderPlayer::Horizontal) {
         assert(p2->get_agent() == SliderPlayer::Vertical);
@@ -47,6 +41,12 @@ Referee::sanity_check() const {
     }
     // check 2 - make sure that the 1st player is consistent
     assert(p1->get_player() == p2->get_player());
+
+    // current_player is the player that has to make the move this round
+    // other_player is the 'other" player that made its move in the previous round
+    auto tmp = get_players();
+    current_player = tmp.first;
+    other_player = tmp.second;
 }
 
 std::pair<std::shared_ptr<Slider>, std::shared_ptr<Slider>>
@@ -64,11 +64,11 @@ Referee::update() {
     if (window->isOpen()) {
         window->clear();
         using std::swap;
-
         if (!slider_board.has_winner() && !draw_game()) {
             Move pending_move;
             current_player->next_move(pending_move);
             if (current_player->ready_to_move()) {
+                gather_statistics(pending_move);
                 // we can be 100% sure it's a legal move because next_move() of slider always checks for illegal moves.
                 slider_board.make_move(pending_move);
                 // inform other player that we've updated the board
@@ -125,6 +125,17 @@ Referee::draw_gui() {
                 piece.setPosition(piece_pos);
                 window->draw(piece);
             }
+        }
+    }
+}
+
+void
+Referee::gather_statistics(const Move &move) {
+    if (statistics_mode) {
+        if (current_player->get_player() == p1->get_player()) {
+            player1_stats.push_back(move);
+        } else {
+            player2_stats.push_back(move);
         }
     }
 }
