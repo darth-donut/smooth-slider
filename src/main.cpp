@@ -22,9 +22,9 @@ main() {
     // GUI interface
     SliderRenderWindow window(sf::VideoMode(800, 550), "Slider");
     Minimax<Move, Slider> ai_strategy{9};
-
+    Model bob;
     Referee referee(
-            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy),
+            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy, &bob),
             std::shared_ptr<Slider>(new SliderGUI(SliderPlayer::Horizontal, board_size, starting_player, window)),
             board_size,
             &window);

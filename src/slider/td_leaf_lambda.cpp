@@ -16,6 +16,7 @@ TDLeafLambda::TDLeafLambda(Model &model,
           model_lock(model_lock),
           move_history(move_history) {}
 
+// todo: model[index] will suffer from race condition: use model_lock before reading/writing
 void
 TDLeafLambda::update_weights() {
     constexpr double alpha = 1.0;

@@ -8,7 +8,6 @@
 #include <vector>
 
 #include "Slider.h"
-#include "commons/ai/agent/Minimax.h"
 #include "slider/evaluation_functions/basic_eval.h"
 #include "util.h"
 

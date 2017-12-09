@@ -31,6 +31,7 @@ block_eval(const Slider &state, size_t depth) {
     // y decrease as it approaches 1. I.e. heavily favours less opponent_moves_left
 
     // player_moves_left is important, but not linearly important, give it a log increase
+    // todo: this returns -nan! fix this ASAP
     return log(player_moves_left) -
            log((state.get_board().size() - 1) / c * opponent_moves_left / total_possible_moves);
 }
