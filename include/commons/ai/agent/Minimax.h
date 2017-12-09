@@ -44,7 +44,7 @@ public:
 
 private:
     static constexpr double INF = std::numeric_limits<double>::max();
-    static constexpr double NINF = std::numeric_limits<double>::min();
+    static constexpr double NINF = std::numeric_limits<double>::lowest();
     size_type max_depth = std::numeric_limits<size_type>::max();
 private:
     std::tuple<std::shared_ptr<State>, double, size_type> maxValue(const State &state, double alpha, double beta, size_type depth,
