@@ -10,7 +10,7 @@
 #include "Board.h"
 
 SliderGUI::SliderGUI(SliderPlayer agent, size_t size, SliderPlayer player, const sf::RenderWindow& window) :
-    Slider(agent, size, player, nullptr),
+    Slider(agent, size, player, nullptr, nullptr),
     window(window) { }
 
 void

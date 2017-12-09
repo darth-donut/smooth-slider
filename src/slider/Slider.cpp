@@ -13,12 +13,13 @@
 #include "util.h"
 
 
-Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy)
+Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model)
         : agent(agent),
           size(size),
           board(size),
           player(player),
-          strategy(strategy) {}
+          strategy(strategy),
+          model(model) {}
 
 bool
 Slider::update(const Move &move) {
@@ -79,14 +80,10 @@ Slider::is_leaf() const {
 
 void
 Slider::next_move(Move &move) {
-    if (strategy) {
-        auto ret_val = strategy->next_move(*this, compound_eval);
-        assert(ret_val.second);
-        // remember to update our own board!
-        update(ret_val.first);
-        move = ret_val.first;
-    } else {
-        move.error("Strategy not set");
-    }
+    auto ret_val = strategy->next_move(*this, compound_eval);
+    assert(ret_val.second);
+    // remember to update our own board!
+    update(ret_val.first);
+    move = ret_val.first;
 }
 

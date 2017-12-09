@@ -6,6 +6,7 @@
 #include "slider/io/SliderIO.h"
 #include "slider/gui/SliderGUI.h"
 #include "slider/Referee.h"
+#include "model.h"
 
 #define SLIDER_GUI_TOGG 0
 
@@ -62,9 +63,11 @@ void
 play_games(std::size_t board_size, SliderPlayer starting_player) {
     Minimax<Move, Slider> ai_strategy1{4};
     Minimax<Move, Slider> ai_strategy2{5};
+    Model bob;
+    Model alice;
     Referee referee(
-            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1),
-            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2),
+            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1, &bob),
+            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
             board_size);
 
     auto winner = referee.start_game();

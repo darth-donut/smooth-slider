@@ -20,7 +20,7 @@ set(SOURCE_FILES
         src/commons/util.cpp
         src/main.cpp
         src/slider/Board.cpp
-        src/slider/evaluation_functions/basic_eval.h.cpp
+        src/slider/evaluation_functions/basic_eval.cpp
         src/slider/gui/SliderGUI.cpp
         src/slider/io/SliderIO.cpp
         src/slider/Referee.cpp

@@ -161,7 +161,7 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Slider.cpp">
 			<Option target="slider"/>
 		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.h.cpp">
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/SliderGUI.cpp">

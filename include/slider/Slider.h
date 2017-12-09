@@ -16,10 +16,11 @@
 
 template<typename T, typename S>
 class Strategy;
+class Model;
 
 class Slider {
 public:
-    Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider>* strategy);
+    Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model);
 
     /// updates the board according to provided move
     /// \param move Move to make
@@ -58,10 +59,16 @@ public:
     /// \return player of this slider game
     SliderPlayer get_agent() const { return agent; }
 
+    /// returns a const pointer(low-level const) to the current model that this slider player is using.
+    /// This is typically used when the evaluation function wants to access this slider's
+    /// model (which in turn consists of the weights and state evaluation functions)
+    /// \return const pointer(low-level const) to model that is attached to this slider player.
+    Model *const get_model() const { return model; }
+
     /// next move this player is going to make (also automatically updates the board state internally)
     /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
     /// \param move this slider player wants to make
-    virtual void next_move(Move& move);
+    virtual void next_move(Move &move);
 
     /// returns true if player is ready to move. This is only ever meaningful when Slider is
     /// a non-AI based agent
@@ -82,7 +89,8 @@ protected:
             SliderMove::Left,
             SliderMove::Down
     };
-    Strategy<Move, Slider>* strategy;
+    Strategy<Move, Slider> *strategy;
+    Model *model;
 };
 
 
