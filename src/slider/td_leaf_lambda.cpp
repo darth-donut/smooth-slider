@@ -16,7 +16,6 @@ TDLeafLambda::TDLeafLambda(Model &model,
           model_lock(model_lock),
           move_history(move_history) {}
 
-// todo: model[index] will suffer from race condition: use model_lock before reading/writing
 void
 TDLeafLambda::update_weights() {
     constexpr double alpha = 1.0;
@@ -24,7 +23,6 @@ TDLeafLambda::update_weights() {
     // todo: tune this to suitable values for a and b
     constexpr double a = 1, b = 1;
     std::vector<double> lambda_array;
-
     for (int t = 0; t < move_history.size() - 1; ++t) {
         double t_lambda_sum = 0;
         for (int i = t; i < move_history.size(); ++i) {
@@ -50,4 +48,6 @@ TDLeafLambda::update_weights() {
         }
         model[k] += delta_weight;
     }
+    std::lock_guard<std::mutex> guard_flush(model_lock);
+    model.flush();
 }

@@ -14,18 +14,25 @@ class Slider;
 
 class Model {
 public:
-    Model() = default;
-    Model(const std::string& model_file);
-    typedef double evalf (const Slider&, std::size_t);
+    typedef double evalf(const Slider &, std::size_t);
+
     typedef std::vector<double>::size_type size_type;
-    double& operator[](size_type i) { return weights[i]; };
+public:
+    Model() : phi({count_eval}), weights({1}) {}
+
+    Model(const std::string &model_file);
+
+    double &operator[](size_type i) { return weights[i]; };
+
     size_type size() const { return weights.size(); }
 
+    void flush();
 
 public:
-    std::vector<evalf*> phi{count_eval/*, block_eval*/};
+    std::vector<evalf *> phi;
 private:
-    std::vector<double> weights{1/*, 0*/};
+    std::vector<double> weights;
+    const std::string fname;
 };
 
 

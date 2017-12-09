@@ -1,6 +1,7 @@
 #include <iostream>
 #include <thread>
 #include <SFML/Graphics.hpp>
+#include <slider/td_leaf_lambda.h>
 
 #include "slider/gui/slider_render_window.h"
 #include "slider/io/SliderIO.h"
@@ -63,13 +64,11 @@ void
 play_games(std::size_t board_size, SliderPlayer starting_player) {
     Minimax<Move, Slider> ai_strategy1{4};
     Minimax<Move, Slider> ai_strategy2{5};
-    Model bob;
-    Model alice;
+    Model bob(Resource::bob_model);
     Referee referee(
             std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1, &bob),
-            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
+            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &bob),
             board_size);
-
     auto winner = referee.start_game();
     if (!winner.second) {       // if it wasn't a draw
         std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
