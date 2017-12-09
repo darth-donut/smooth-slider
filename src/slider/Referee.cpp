@@ -5,6 +5,7 @@
 
 #include <cassert>
 #include <iostream>
+#include <cmath>
 #include <SFML/Graphics/RectangleShape.hpp>
 #include <SFML/Graphics/CircleShape.hpp>
 #include <SFML/Graphics/Text.hpp>
@@ -15,7 +16,7 @@
 std::pair<SliderPlayer, bool>
 Referee::start_game(bool disp_interm) {
     using std::swap;
-    while (!slider_board.has_winner() && !draw_game()) {
+    while (!slider_board.has_winner() && !draw_game() && has_moves_left()) {
         Move pending_move;
         current_player->next_move(pending_move);
         gather_statistics(pending_move);
@@ -28,7 +29,7 @@ Referee::start_game(bool disp_interm) {
             std::cout << slider_board  << std::endl;
         }
     }
-    return std::make_pair(slider_board.get_winner(), draw_game());
+    return std::make_pair(slider_board.get_winner(), draw_game() || !has_moves_left());
 }
 
 void
@@ -47,6 +48,8 @@ Referee::assign_players() {
     auto tmp = get_players();
     current_player = tmp.first;
     other_player = tmp.second;
+
+    max_moves_allowed = static_cast<size_t>(std::pow(10, slider_board.size()));
 }
 
 std::pair<std::shared_ptr<Slider>, std::shared_ptr<Slider>>
@@ -64,7 +67,7 @@ Referee::update() {
     if (window->isOpen()) {
         window->clear();
         using std::swap;
-        if (!slider_board.has_winner() && !draw_game()) {
+        if (!slider_board.has_winner() && !draw_game() && has_moves_left()) {
             Move pending_move;
             current_player->next_move(pending_move);
             if (current_player->ready_to_move()) {

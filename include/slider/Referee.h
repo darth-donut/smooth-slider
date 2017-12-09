@@ -75,6 +75,9 @@ private:
     bool statistics_mode;
     std::vector<Move> player1_stats;
     std::vector<Move> player2_stats;
+    size_t moves_made = 0;
+    size_t max_moves_allowed;
+
 private:
     /// basic sanity checking
     void assign_players();
@@ -86,6 +89,15 @@ private:
     void draw_gui();
 
     void gather_statistics(const Move &move);
+
+    /// only increment moves_made if it's below the threshold moves allowed
+    bool has_moves_left() {
+        if (moves_made >= max_moves_allowed) {
+            return false;
+        }
+        ++moves_made;
+        return true;
+    }
 };
 
 
