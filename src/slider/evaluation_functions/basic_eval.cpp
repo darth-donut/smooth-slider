@@ -4,6 +4,7 @@
 //
 
 #include "basic_eval.h"
+#include "model.h"
 #include <cmath>
 
 double
@@ -30,16 +31,19 @@ block_eval(const Slider &state, size_t depth) {
     // y decrease as it approaches 1. I.e. heavily favours less opponent_moves_left
 
     // player_moves_left is important, but not linearly important, give it a log increase
+    // todo: this returns -nan! fix this ASAP
     return log(player_moves_left) -
            log((state.get_board().size() - 1) / c * opponent_moves_left / total_possible_moves);
 }
 
+// TODO: improve this
 double
 compound_eval(const Slider &state, size_t depth) {
-    // TODO: improve this
-//    auto ret_val =
-//            (state.get_board().size() - state.get_board().get_piece_positions(state.get_player()).size()) * 2.8797 *
-//            count_eval(state) + 2.11 * block_eval(state);
-    auto ret_val = count_eval(state, depth);
-    return (1 - (depth * 1.0) / (depth + 1)) * ret_val;
+    Model *model = state.get_model();
+    double score = 0;
+    for (auto i = 0; i < model->size(); ++i) {
+        // function * weight
+        score += model->phi[i](state, depth) * (*model)[i];
+    }
+    return (1 - (depth * 1.0) / (depth + 1)) * score;
 }

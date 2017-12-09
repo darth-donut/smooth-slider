@@ -20,11 +20,11 @@ set(SOURCE_FILES
         src/commons/util.cpp
         src/main.cpp
         src/slider/Board.cpp
-        src/slider/evaluation_functions/basic_eval.h.cpp
+        src/slider/evaluation_functions/basic_eval.cpp
         src/slider/gui/SliderGUI.cpp
         src/slider/io/SliderIO.cpp
         src/slider/Referee.cpp
-        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h)
+        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h src/slider/td_leaf_lambda.cpp include/slider/td_leaf_lambda.h src/model.cpp include/slider/model.h include/commons/resource.h)
 
 include_directories(include/
         include/commons
@@ -40,3 +40,9 @@ add_executable(${EXE} ${SOURCE_FILES})
 set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 find_package(SFML 1.6 REQUIRED system window graphics network audio)
 target_link_libraries(${EXE} ${SFML_LIBRARIES})
+
+# Multithreading
+find_package(Threads REQUIRED)
+target_link_libraries(${EXE} ${CMAKE_THREAD_LIBS_INIT})
+
+set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3")

@@ -104,6 +104,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/ai/agent/Minimax.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/resource.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/util.h">
 			<Option target="slider"/>
 		</Unit>
@@ -131,13 +134,22 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/io/SliderIO.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/model.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/slider_utils.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/td_leaf_lambda.h">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/commons/util.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/main.cpp">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/model.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Board.cpp">
@@ -149,7 +161,7 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/Slider.cpp">
 			<Option target="slider"/>
 		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.h.cpp">
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/SliderGUI.cpp">
@@ -159,6 +171,9 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/io/SliderIO.cpp">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/td_leaf_lambda.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/CMakeLists.txt">

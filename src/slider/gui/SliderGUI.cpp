@@ -10,11 +10,11 @@
 #include "Board.h"
 
 SliderGUI::SliderGUI(SliderPlayer agent, size_t size, SliderPlayer player, const sf::RenderWindow& window) :
-    Slider(agent, size, player, nullptr),
+    Slider(agent, size, player, nullptr, nullptr),
     window(window) { }
 
-Move
-SliderGUI::next_move() {
+void
+SliderGUI::next_move(Move &p_move) {
     // not ready to move just yet (still waiting for user input)
     ready = false;
     sf::Vector2i mouse = sf::Mouse::getPosition(window);
@@ -41,16 +41,19 @@ SliderGUI::next_move() {
                     ready = true;
 //                    std::cout << "Move accepted: " << move << std::endl;
                     update(move);
-                    return move;
+                    p_move = move;
+                    return;
                 } else {
                     Move m;
                     m.error("Illegal move, Try again!");
-                    return m;
+                    p_move = m;
+                    return;
                 }
             } catch (const std::exception& e) {
                 Move m;
                 m.error("Illegal move: " + std::string(e.what()) + "!");
-                return m;
+                p_move = m;
+                return;
             }
         }
     }
@@ -58,7 +61,7 @@ SliderGUI::next_move() {
     // ready is still set to false unless user supplied a legal move & we made sure to call
     // is_ready() in Referee.cpp
     assert(!ready);
-    return Move();
+    p_move = Move();
 }
 
 bool

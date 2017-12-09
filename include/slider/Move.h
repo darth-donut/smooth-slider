@@ -13,6 +13,7 @@
 #include <cctype>
 #include <iostream>
 #include <string>
+#include <memory>
 
 #include "slider_utils.h"
 #include "commons/util.h"
@@ -20,12 +21,15 @@
 #define ALPHA_START 65      // A
 #define NUMERIC_START 48    // 0
 
+class Slider;
+
 /// Immutable class Move
 class Move {
     friend std::ostream &operator<<(std::ostream &os, const Move &move);
 
 public:
     typedef long int size_type;
+    typedef std::tuple<std::shared_ptr<Slider>, double, size_t> Metadata_t;
     using Coordinate = std::pair<size_type, size_type>;
 
     Move() = default;
@@ -102,7 +106,7 @@ public:
     /// sets this move as a bad move - i.e. this Move can be returned to indicate that a user has
     /// given us a bad input
     /// \param msg Error message
-    void error(const std::string& msg) {
+    void error(const std::string &msg) {
         bad_move = true;
         err_msg = msg;
     }
@@ -113,11 +117,25 @@ public:
 
     /// Returns the associated error message with bad_move
     /// \return std::string
-    const std::string& get_err_msg() const { return err_msg; }
+    const std::string &get_err_msg() const { return err_msg; }
 
     /// Returns the associated error message with bad_move
     /// \return std::string
     std::string get_err_msg() { return err_msg; }
+
+    /// adds a tuple of metadata (use Minimax's public typedefs to index the appropriate values. it consists of:
+    /// 0. std::share_ptr to Slider state (principal variation)
+    /// 1. type double of principal variation score
+    /// 2. type size_t of depth of principal variation
+    /// \param data std::tuple of 0, 1, 2
+    void add_metadata(const Metadata_t &data) { metadata = data; }
+
+    /// returns a tuple of metadata (use Minimax's public typedefs to index the appropriate values. it consists of:
+    /// 0. std::share_ptr to Slider state (principal variation)
+    /// 1. type double of principal variation score
+    /// 2. type size_t of depth of principal variation
+    /// \return std::tuple of 0, 1, 2
+    const Metadata_t &get_metadata() const { return metadata; }
 
 private:
     SliderPlayer player = SliderPlayer::Horizontal;
@@ -127,7 +145,7 @@ private:
     // this is mostly used when depending on user input (our slider AI never returns an illegal move)
     bool bad_move = false;
     std::string err_msg;
-
+    Metadata_t metadata;
 private:
     /// converts string representation of move into SliderMove type
     /// \param input String type of either up, down, left, or right (case-insensitive)

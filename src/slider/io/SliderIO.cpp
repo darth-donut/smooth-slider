@@ -13,8 +13,8 @@
 #define ALPHA_START 65      // A
 #define NUMERIC_START 48    // 0
 
-Move
-SliderIO::next_move() {
+void
+SliderIO::next_move(Move &p_move) {
     do {
         // print board and flush
         std::cout << decorated_board() << '\n' << "You are "
@@ -26,9 +26,10 @@ SliderIO::next_move() {
         try {
             Move move(agent, input, board.size());
             if (board.is_legal(move)) {
-                // update our own board before returning valid move
+                // update our own board before 'returning' valid move
                 update(move);
-                return move;
+                p_move = move;
+                return;
             } else {
                 // print and immediately flush
                 std::cout << "Move requested isn't legal, try again!" << std::endl;

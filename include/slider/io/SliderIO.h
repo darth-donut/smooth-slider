@@ -16,9 +16,9 @@
 class SliderIO : public Slider {
 public:
     SliderIO(SliderPlayer agent, size_t size, SliderPlayer player)
-        : Slider(agent, size, player, nullptr) {}
+        : Slider(agent, size, player, nullptr, nullptr) {}
 
-    Move next_move() override;
+    void next_move(Move &mve) override;
 
 private:
     /// a string representation of a decorated board (i.e. edges marked with alphanumerics as its coordinate system)

@@ -16,22 +16,26 @@
 
 class Referee {
 public:
-    Referee(std::shared_ptr<Slider> p1, std::shared_ptr<Slider> p2, Board::size_type n)
-            : p1(std::move(p1)),
-              p2(std::move(p2)),
-              slider_board(n) { sanity_check(); }
-
-    Referee(std::shared_ptr<Slider> p1, std::shared_ptr<Slider> p2, Board::size_type n, SliderRenderWindow *window)
+    Referee(std::shared_ptr<Slider> p1,
+            std::shared_ptr<Slider> p2,
+            Board::size_type n,
+            bool gather_stats = true)
             : p1(std::move(p1)),
               p2(std::move(p2)),
               slider_board(n),
-              window(window) {
-        sanity_check();
-        // current_player is the player that has to make the move this round
-        // other_player is the 'other" player that made its move in the previous round
-        auto tmp = get_players();
-        current_player = tmp.first;
-        other_player = tmp.second;
+              statistics_mode(gather_stats) { assign_players(); }
+
+    Referee(std::shared_ptr<Slider> p1,
+            std::shared_ptr<Slider> p2,
+            Board::size_type n,
+            SliderRenderWindow *window,
+            bool gather_stats = true)
+            : p1(std::move(p1)),
+              p2(std::move(p2)),
+              slider_board(n),
+              window(window),
+              statistics_mode(gather_stats) {
+        assign_players();
     }
 
     /// This method is called instead of update if the players aren't using GUI interface. It's a blocking method
@@ -53,22 +57,47 @@ public:
     /// XXX: INSTRUCTIONS: call referee.update() in while (window.isOpen()) loop of SFML to render the board in window
     void update();
 
+    /// returns statistics for player 1
+    /// \return std::vector of moves that player 1 has made throughout the entire game
+    const std::vector<Move> &get_p1_stats() const { return player1_stats; }
+
+    /// returns statistics for player 2
+    /// \return std::vector of moves that player 2 has made throughout the entire game
+    const std::vector<Move> &get_p2_stats() const { return player2_stats; }
+
 private:
-    std::shared_ptr<Slider> p1;
-    std::shared_ptr<Slider> p2;
+    const std::shared_ptr<Slider> p1;
+    const std::shared_ptr<Slider> p2;
     Board slider_board;
     SliderRenderWindow *window = nullptr;
     std::shared_ptr<Slider> current_player;
     std::shared_ptr<Slider> other_player;
+    bool statistics_mode;
+    std::vector<Move> player1_stats;
+    std::vector<Move> player2_stats;
+    size_t moves_made = 0;
+    size_t max_moves_allowed;
+
 private:
     /// basic sanity checking
-    void sanity_check() const;
+    void assign_players();
 
     std::pair<std::shared_ptr<Slider>, std::shared_ptr<Slider>> get_players() const;
 
     bool draw_game() const;
 
     void draw_gui();
+
+    void gather_statistics(const Move &move);
+
+    /// only increment moves_made if it's below the threshold moves allowed
+    bool has_moves_left() {
+        if (moves_made >= max_moves_allowed) {
+            return false;
+        }
+        ++moves_made;
+        return true;
+    }
 };
 
 
