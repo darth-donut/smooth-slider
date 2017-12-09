@@ -105,7 +105,7 @@ public:
     /// sets this move as a bad move - i.e. this Move can be returned to indicate that a user has
     /// given us a bad input
     /// \param msg Error message
-    void error(const std::string& msg) {
+    void error(const std::string &msg) {
         bad_move = true;
         err_msg = msg;
     }
@@ -116,18 +116,18 @@ public:
 
     /// Returns the associated error message with bad_move
     /// \return std::string
-    const std::string& get_err_msg() const { return err_msg; }
+    const std::string &get_err_msg() const { return err_msg; }
 
     /// Returns the associated error message with bad_move
     /// \return std::string
     std::string get_err_msg() { return err_msg; }
 
     /// adds metadata for this move made by player. Typically used for TDLeaf lambda to collect information
-    /// about the principal variation node and the evaluation score of the leaf node
-    /// \param data std::pair of std::shared_ptr<Slider> and double (principal var node, eval score)
-    void add_metadata(const std::pair<std::shared_ptr<Slider>, double>& data) { metadata = data; }
+    /// about the principal variation node and the evaluation score of the leaf node at provided depth
+    /// \param data std::pair of std::shared_ptr<Slider> and std::pair<double, size_t> (principal var node, (eval score, depth))
+    void add_metadata(const std::pair<std::shared_ptr<Slider>, std::pair<double, size_t>> &data) { metadata = data; }
 
-    const std::pair<std::shared_ptr<Slider>, double> get_metadata() const { return metadata; }
+    const std::pair<std::shared_ptr<Slider>, std::pair<double, size_t>> get_metadata() const { return metadata; }
 
 private:
     SliderPlayer player = SliderPlayer::Horizontal;
@@ -137,7 +137,7 @@ private:
     // this is mostly used when depending on user input (our slider AI never returns an illegal move)
     bool bad_move = false;
     std::string err_msg;
-    std::pair<std::shared_ptr<Slider>, double> metadata;
+    std::pair<std::shared_ptr<Slider>, std::pair<double, size_t>> metadata;
 private:
     /// converts string representation of move into SliderMove type
     /// \param input String type of either up, down, left, or right (case-insensitive)

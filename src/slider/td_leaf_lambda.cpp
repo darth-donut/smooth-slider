@@ -27,7 +27,8 @@ TDLeafLambda::update_weights() {
         double t_lambda_sum = 0;
         for (int i = t; i < move_history.size(); ++i) {
             t_lambda_sum += pow(lambda, i - t) *
-                               (move_history[i + 1].get_metadata().second - move_history[i].get_metadata().second);
+                            (move_history[i + 1].get_metadata().second.first -
+                             move_history[i].get_metadata().second.first);
         }
         lambda_array.push_back(t_lambda_sum);
     }
@@ -42,7 +43,9 @@ TDLeafLambda::update_weights() {
             // meta.first = state, meta.second = eval value
             auto meta = move_history[t].get_metadata();
             // todo: sech2 and phi
-            delta_weight += alpha * a * b * sech2(b * meta.second) * phi[k](*meta.first) * lambda_array[t];
+            delta_weight +=
+                    alpha * a * b * sech2(b * meta.second.first) * model.phi[k](*meta.first, meta.second.second) *
+                    lambda_array[t];
         }
         model[k] += delta_weight;
     }

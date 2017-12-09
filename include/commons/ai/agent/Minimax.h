@@ -43,10 +43,10 @@ private:
     static constexpr double NINF = std::numeric_limits<double>::min();
     size_type max_depth = std::numeric_limits<size_type>::max();
 private:
-    std::pair<std::shared_ptr<State>, double> maxValue(const State &state, double alpha, double beta, size_type depth,
+    std::pair<std::shared_ptr<State>, std::pair<double, size_type>> maxValue(const State &state, double alpha, double beta, size_type depth,
                                                        typename Strategy<Move, State>::evalf) const;
 
-    std::pair<std::shared_ptr<State>, double> minValue(const State &state, double alpha, double beta, size_type depth,
+    std::pair<std::shared_ptr<State>, std::pair<double, size_type>> minValue(const State &state, double alpha, double beta, size_type depth,
                                                        typename Strategy<Move, State>::evalf) const;
 };
 
@@ -62,66 +62,68 @@ Minimax<T, State>::next_move(const State &state, typename Strategy<T, State>::ev
         return std::make_pair(best_move, false);
     }
     std::shared_ptr<State> principal_var = nullptr;
+    size_type principal_depth;
     for (const auto &move : possible_moves) {
         auto ret_val = minValue(state.peek_update(move), alpha, beta, 1, eval);
-        double v_prime = ret_val.second;
+        double v_prime = ret_val.second.first;
         if (v_prime > v) {
             principal_var = ret_val.first;
+            principal_depth = ret_val.second.second;
             v = v_prime;
             best_move = move;
         }
         alpha = std::max(v, alpha);
     }
-    best_move.add_metadata(std::make_pair(principal_var, v));
+    best_move.add_metadata(std::make_pair(principal_var, std::make_pair(v, principal_depth)));
     return std::make_pair(best_move, true);
 }
 
 template<typename T, typename State>
-std::pair<std::shared_ptr<State>, double>
+std::pair<std::shared_ptr<State>, std::pair<double, size_type>>
 Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_type depth,
                             typename Strategy<T, State>::evalf eval) const {
     if (state.is_leaf() || depth >= max_depth) {
-        return {std::make_shared<State>(state), eval(state, depth)};
+        return {std::make_shared<State>(state), {eval(state, depth), depth}};
     }
     double v = NINF;
     std::shared_ptr<State> principal_var = nullptr;
     for (const auto &move : state.possible_moves()) {
         auto child_node = state.peek_update(move);
         auto max_val = minValue(child_node, alpha, beta, depth + 1, eval);
-        if (max_val.second > v) {
+        if (max_val.second.first > v) {
             principal_var = max_val.first;
-            v = max_val.second;
+            v = max_val.second.first;
         }
         if (v >= beta) {
-            return {principal_var, v};
+            return {principal_var, {v, depth}};
         }
         alpha = std::max(alpha, v);
     }
-    return {principal_var, v};
+    return {principal_var, {v, depth}};
 }
 
 template<typename T, typename State>
-std::pair<std::shared_ptr<State>, double>
+std::pair<std::shared_ptr<State>, std::pair<double, size_type>>
 Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_type depth,
                             typename Strategy<T, State>::evalf eval) const {
     if (state.is_leaf() || depth >= max_depth) {
-        return {std::make_shared<State>(state), eval(state, depth)};
+        return {std::make_shared<State>(state), {eval(state, depth), depth}};
     }
     double v = INF;
     std::shared_ptr<State> principal_var = nullptr;
     for (const auto &move : state.possible_moves()) {
         auto child_node = state.peek_update(move);
         auto min_val = maxValue(child_node, alpha, beta, depth + 1, eval);
-        if (min_val.second < v) {
-            v = min_val.second;
+        if (min_val.second.first < v) {
+            v = min_val.second.first;
             principal_var = min_val.first;
         }
         if (v <= alpha) {
-            return {principal_var, v};
+            return {principal_var, {v, depth}};
         }
         beta = std::min(beta, v);
     }
-    return {principal_var, v};
+    return {principal_var, {v, depth}};
 }
 
 
