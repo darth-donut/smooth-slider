@@ -11,9 +11,13 @@
 
 #include "model.h"
 #include "Move.h"
+#include "commons/ai/agent/Minimax.h"
 
 class TDLeafLambda {
 public:
+    static constexpr size_t V_INDEX = Minimax<Slider, Move>::V_INDEX;
+    static constexpr size_t DEPTH_INDEX = Minimax<Slider, Move>::DEPTH_INDEX;
+    static constexpr size_t STATE_INDEX = Minimax<Slider, Move>::STATE_INDEX;
     TDLeafLambda(Model& model, std::mutex& model_lock, const std::vector<Move>& move_history);
     void update_weights();
 

@@ -29,6 +29,7 @@ class Move {
 
 public:
     typedef long int size_type;
+    typedef std::tuple<std::shared_ptr<Slider>, double, size_t> Metadata_t;
     using Coordinate = std::pair<size_type, size_type>;
 
     Move() = default;
@@ -122,12 +123,19 @@ public:
     /// \return std::string
     std::string get_err_msg() { return err_msg; }
 
-    /// adds metadata for this move made by player. Typically used for TDLeaf lambda to collect information
-    /// about the principal variation node and the evaluation score of the leaf node at provided depth
-    /// \param data std::pair of std::shared_ptr<Slider> and std::pair<double, size_t> (principal var node, (eval score, depth))
-    void add_metadata(const std::pair<std::shared_ptr<Slider>, std::pair<double, size_t>> &data) { metadata = data; }
+    /// adds a tuple of metadata (use Minimax's public typedefs to index the appropriate values. it consists of:
+    /// 0. std::share_ptr to Slider state (principal variation)
+    /// 1. type double of principal variation score
+    /// 2. type size_t of depth of principal variation
+    /// \param data std::tuple of 0, 1, 2
+    void add_metadata(const Metadata_t &data) { metadata = data; }
 
-    const std::pair<std::shared_ptr<Slider>, std::pair<double, size_t>> get_metadata() const { return metadata; }
+    /// returns a tuple of metadata (use Minimax's public typedefs to index the appropriate values. it consists of:
+    /// 0. std::share_ptr to Slider state (principal variation)
+    /// 1. type double of principal variation score
+    /// 2. type size_t of depth of principal variation
+    /// \return std::tuple of 0, 1, 2
+    const Metadata_t &get_metadata() const { return metadata; }
 
 private:
     SliderPlayer player = SliderPlayer::Horizontal;
@@ -137,7 +145,7 @@ private:
     // this is mostly used when depending on user input (our slider AI never returns an illegal move)
     bool bad_move = false;
     std::string err_msg;
-    std::pair<std::shared_ptr<Slider>, std::pair<double, size_t>> metadata;
+    Metadata_t metadata;
 private:
     /// converts string representation of move into SliderMove type
     /// \param input String type of either up, down, left, or right (case-insensitive)

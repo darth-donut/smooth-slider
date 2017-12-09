@@ -17,7 +17,7 @@ public:
 
     // todo the i'th weight of this model (1 .. K) where K = number of total weights (this is eq to # of functions)
     // todo: need to make this thread safe (there are consumers(slider) and producers(TDLeafLambda) using this)
-    double& operator[](size_type i);
+    double& operator[](size_type i) { return weights[i]; };
 
     size_type size() const { return weights.size(); }
 

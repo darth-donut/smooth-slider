@@ -10,11 +10,12 @@
 #include <unordered_set>
 
 #include "commons/ai/agent/Minimax.h"
-#include "Strategy.h"
 #include "Board.h"
 #include "Move.h"
 #include "slider_utils.h"
 
+template<typename T, typename S>
+class Strategy;
 
 class Slider {
 public:
