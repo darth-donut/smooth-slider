@@ -110,6 +110,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/util.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/learner/Trainer.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/Board.h">
 			<Option target="slider"/>
 		</Unit>
@@ -144,6 +147,9 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/commons/util.cpp">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/learner/Trainer.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/main.cpp">

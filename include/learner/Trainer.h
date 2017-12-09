@@ -7,8 +7,27 @@
 #define SLIDER_TRAINING_H
 
 
-class training {
+#include <cstdlib>
+#include <mutex>
+#include "slider/slider_utils.h"
 
+class Trainer {
+public:
+    Trainer(std::size_t board_size, SliderPlayer starting_player, std::size_t ngames)
+            : board_size(board_size),
+              starting_player(starting_player),
+              ngames(ngames) {}
+
+    void begin_training();
+
+private:
+    void play_games();
+
+private:
+    std::size_t board_size;
+    SliderPlayer starting_player;
+    std::size_t ngames;
+    std::mutex model_mutex;
 };
 
 

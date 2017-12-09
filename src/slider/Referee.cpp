@@ -49,7 +49,7 @@ Referee::assign_players() {
     current_player = tmp.first;
     other_player = tmp.second;
 
-    max_moves_allowed = static_cast<size_t>(std::pow(10, slider_board.size()));
+    max_moves_allowed = static_cast<size_t>(std::pow(3, slider_board.size()));
 }
 
 std::pair<std::shared_ptr<Slider>, std::shared_ptr<Slider>>

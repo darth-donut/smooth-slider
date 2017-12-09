@@ -81,6 +81,7 @@ void
 Slider::next_move(Move &move) {
     auto ret_val = strategy->next_move(*this, compound_eval);
     assert(ret_val.second);
+    assert(ret_val.first.get_player() == agent);
     // remember to update our own board!
     update(ret_val.first);
     move = ret_val.first;
