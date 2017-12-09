@@ -35,14 +35,13 @@ TDLeafLambda::update_weights() {
 
     // for each weight:
     for (int k = 0; k < model.size(); ++k) {
-        // delta w = alpha * sigma{i = 1, N - 1}(a * b * sech^2( b * meta.second) * phi_i(meta.first) * sigma{j = i, N - 1}(lambda^(j-i) * d_j ) )
-        // where d_j = move_history[j+1].second - meta.second (i.e. difference between immediate state and current)
+        // delta w = alpha * sigma{t = 1, N - 1}(a * b * sech^2( b * meta.second.evalfscore) * phi_k(*meta.first, meta.second.depth) * sigma{i = t, N - 1}(lambda^(i-t) * d_i ) )
         // SIG(t = 1, N - 1): FOR ALL STATES
         double delta_weight = 0;
         for (int t = 0; t < move_history.size() - 1; ++t) {
             // meta.first = state, meta.second = eval value
             auto meta = move_history[t].get_metadata();
-            // todo: sech2 and phi
+            // todo: sech2
             delta_weight +=
                     alpha * a * b * sech2(b * meta.second.first) * model.phi[k](*meta.first, meta.second.second) *
                     lambda_array[t];

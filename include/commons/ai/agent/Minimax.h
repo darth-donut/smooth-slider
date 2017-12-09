@@ -87,19 +87,21 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
     }
     double v = NINF;
     std::shared_ptr<State> principal_var = nullptr;
+    size_type principal_depth = depth;
     for (const auto &move : state.possible_moves()) {
         auto child_node = state.peek_update(move);
         auto max_val = minValue(child_node, alpha, beta, depth + 1, eval);
         if (max_val.second.first > v) {
-            principal_var = max_val.first;
             v = max_val.second.first;
+            principal_var = max_val.first;
+            principal_depth = max_val.second.second;
         }
         if (v >= beta) {
-            return {principal_var, {v, depth}};
+            return {principal_var, {v, principal_depth}};
         }
         alpha = std::max(alpha, v);
     }
-    return {principal_var, {v, depth}};
+    return {principal_var, {v, principal_depth}};
 }
 
 template<typename T, typename State>
@@ -111,19 +113,21 @@ Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_
     }
     double v = INF;
     std::shared_ptr<State> principal_var = nullptr;
+    size_type principal_depth = depth;
     for (const auto &move : state.possible_moves()) {
         auto child_node = state.peek_update(move);
         auto min_val = maxValue(child_node, alpha, beta, depth + 1, eval);
         if (min_val.second.first < v) {
             v = min_val.second.first;
             principal_var = min_val.first;
+            principal_depth = min_val.second.second;
         }
         if (v <= alpha) {
-            return {principal_var, {v, depth}};
+            return {principal_var, {v, principal_depth}};
         }
         beta = std::min(beta, v);
     }
-    return {principal_var, {v, depth}};
+    return {principal_var, {v, principal_depth}};
 }
 
 
