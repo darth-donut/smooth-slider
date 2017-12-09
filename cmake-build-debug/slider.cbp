@@ -104,6 +104,9 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/ai/agent/Minimax.h">
 			<Option target="slider"/>
 		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/resource.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/util.h">
 			<Option target="slider"/>
 		</Unit>

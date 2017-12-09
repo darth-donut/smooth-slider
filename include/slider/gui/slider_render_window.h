@@ -13,6 +13,8 @@
 #include <SFML/Graphics/Text.hpp>
 #include <utility>
 #include <SFML/Graphics/CircleShape.hpp>
+
+#include "resource.h"
 #include "SliderGUI.h"
 
 class SliderRenderWindow : public sf::RenderWindow {
@@ -28,7 +30,7 @@ public:
     void disp() {
         if (disp_error) {
             sf::Font font;
-            font.loadFromFile("../res/fonts/AllerDisplay.ttf");
+            font.loadFromFile(Resource::font_path);
             sf::Text text;
             text.setFont(font);
             text.setPosition(getSize().x / 4, 10);

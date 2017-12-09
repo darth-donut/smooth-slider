@@ -24,7 +24,7 @@ set(SOURCE_FILES
         src/slider/gui/SliderGUI.cpp
         src/slider/io/SliderIO.cpp
         src/slider/Referee.cpp
-        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h src/slider/td_leaf_lambda.cpp include/slider/td_leaf_lambda.h src/model.cpp include/slider/model.h)
+        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h src/slider/td_leaf_lambda.cpp include/slider/td_leaf_lambda.h src/model.cpp include/slider/model.h include/commons/resource.h)
 
 include_directories(include/
         include/commons
