@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "td_leaf_lambda.h"
+#include "util.h"
 
 
 TDLeafLambda::TDLeafLambda(Model &model,
@@ -26,7 +27,7 @@ TDLeafLambda::update_weights() {
     for (int t = 0; t < move_history.size() - 1; ++t) {
         double t_lambda_sum = 0;
         for (int i = t; i < move_history.size(); ++i) {
-            t_lambda_sum += pow(lambda, i - t) *
+            t_lambda_sum += std::pow(lambda, i - t) *
                             (move_history[i + 1].get_metadata().second.first -
                              move_history[i].get_metadata().second.first);
         }
@@ -41,7 +42,6 @@ TDLeafLambda::update_weights() {
         for (int t = 0; t < move_history.size() - 1; ++t) {
             // meta.first = state, meta.second = eval value
             auto meta = move_history[t].get_metadata();
-            // todo: sech2
             delta_weight +=
                     alpha * a * b * sech2(b * meta.second.first) * model.phi[k](*meta.first, meta.second.second) *
                     lambda_array[t];

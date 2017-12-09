@@ -16,12 +16,13 @@ public:
     typedef std::vector<double>::size_type size_type;
 
     // todo the i'th weight of this model (1 .. K) where K = number of total weights (this is eq to # of functions)
+    // todo: need to make this thread safe (there are consumers(slider) and producers(TDLeafLambda) using this)
     double& operator[](size_type i);
 
     size_type size() const { return weights.size(); }
 
 public:
-    std::vector<evalf> phi;
+    std::vector<evalf*> phi;
 
 private:
     std::vector<double> weights;

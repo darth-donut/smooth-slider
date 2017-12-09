@@ -8,7 +8,8 @@
 
 #include <vector>
 #include <string>
-#include <slider/slider_utils.h>
+#include <cmath>
+#include "slider/slider_utils.h"
 
 
 /// tokenizes the string according to delim
@@ -27,6 +28,12 @@ inline SliderPlayer other_player(SliderPlayer p) {
 inline std::pair<size_t, size_t>
 board_to_vector(const std::pair<size_t, size_t> board_coord) {
     return std::make_pair(board_coord.second, board_coord.first);
+}
+
+// tanh2(x) + sech2(x) = 1
+inline double
+sech2(double n) {
+    return 1 - std::pow(std::tanh(n), 2);
 }
 
 #endif //SLIDER_UTIL_H

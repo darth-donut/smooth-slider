@@ -79,7 +79,7 @@ Minimax<T, State>::next_move(const State &state, typename Strategy<T, State>::ev
 }
 
 template<typename T, typename State>
-std::pair<std::shared_ptr<State>, std::pair<double, size_type>>
+std::pair<std::shared_ptr<State>, std::pair<double, typename Minimax<T, State>::size_type>>
 Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_type depth,
                             typename Strategy<T, State>::evalf eval) const {
     if (state.is_leaf() || depth >= max_depth) {
@@ -105,7 +105,7 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
 }
 
 template<typename T, typename State>
-std::pair<std::shared_ptr<State>, std::pair<double, size_type>>
+std::pair<std::shared_ptr<State>, std::pair<double, typename Minimax<T, State>::size_type>>
 Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_type depth,
                             typename Strategy<T, State>::evalf eval) const {
     if (state.is_leaf() || depth >= max_depth) {
