@@ -5,6 +5,10 @@
 
 #include <algorithm>
 #include <cctype>
+#include <vector>
+#include <string>
+#include <cmath>
+#include <regex>
 
 #include "util.h"
 
@@ -28,3 +32,25 @@ tokenize(const std::string &string, char delim, bool strip_ws) {
     return tokens;
 }
 
+
+bool
+is_weight(const std::string &str) {
+    // any digit, optionally followed by a decimal point and one or more digit after the d.p.
+    static std::regex weight_ptn(R"(^-?\d+(?:\.\d*)?$)");
+    return std::regex_match(str, weight_ptn);
+}
+
+bool
+is_phi_func(const std::string &str) {
+    // any word with length >= 1
+    static std::regex phi_ptn(R"(^\w+$)");
+    return std::regex_match(str, phi_ptn);
+}
+
+bool
+is_ab_const(const std::string &str) {
+    // a: or b: followed by any digit,
+    // optionally followed by a decimal point and one or more digit after the d.p.
+    static std::regex ab_ptn(R"(^[ab]:-?\d+(?:\.\d*)?$)");
+    return std::regex_match(str, ab_ptn);
+}

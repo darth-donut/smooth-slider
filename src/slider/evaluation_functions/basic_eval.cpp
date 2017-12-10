@@ -5,6 +5,7 @@
 
 #include "basic_eval.h"
 #include "model.h"
+#include "util.h"
 #include <cmath>
 
 static double f(double a, double b, double score);

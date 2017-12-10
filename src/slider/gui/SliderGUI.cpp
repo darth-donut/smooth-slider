@@ -8,6 +8,7 @@
 
 #include "slider/gui/SliderGUI.h"
 #include "Board.h"
+#include "util.h"
 
 SliderGUI::SliderGUI(SliderPlayer agent, size_t size, SliderPlayer player, const sf::RenderWindow& window) :
     Slider(agent, size, player, nullptr, nullptr),
