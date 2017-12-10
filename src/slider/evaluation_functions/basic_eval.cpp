@@ -7,6 +7,13 @@
 #include "model.h"
 #include <cmath>
 
+static double f(double a, double b, double score);
+
+static double
+f(double a, double b, double score) {
+    return a * std::tanh(b * score);
+}
+
 double
 count_eval(const Slider &state, size_t depth) {
     auto agent = state.get_agent();
@@ -36,6 +43,7 @@ block_eval(const Slider &state, size_t depth) {
            log((state.get_board().size() - 1) / c * opponent_moves_left / total_possible_moves);
 }
 
+
 // TODO: improve this
 double
 compound_eval(const Slider &state, size_t depth) {
@@ -45,5 +53,6 @@ compound_eval(const Slider &state, size_t depth) {
         // function * weight
         score += model->phi[i](state, depth) * (*model)[i];
     }
-    return (1 - (depth * 1.0) / (depth + 1)) * score;
+    score *= (1 - (depth * 1.0) / (depth + 1));
+    return f(state.get_model()->a, state.get_model()->b, score);
 }

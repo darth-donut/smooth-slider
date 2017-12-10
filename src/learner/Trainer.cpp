@@ -37,7 +37,7 @@ Trainer::play_games() {
             std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1, &bob),
             std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &bob),
             board_size);
-    auto winner = referee.start_game(true);
+    auto winner = referee.start_game();
     if (!winner.second) {       // if it wasn't a draw
         std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
         TDLeafLambda td_trainer(bob, model_mutex, referee.get_p1_stats());

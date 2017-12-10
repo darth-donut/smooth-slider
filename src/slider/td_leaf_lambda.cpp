@@ -20,8 +20,6 @@ void
 TDLeafLambda::update_weights() {
     constexpr double alpha = 1.0;
     constexpr double lambda = .7;
-    // todo: tune this to suitable values for a and b
-    constexpr double a = 1, b = 1;
     std::vector<double> lambda_array;
     for (int t = 0; t < move_history.size() - 1; ++t) {
         double t_lambda_sum = 0;
@@ -42,7 +40,7 @@ TDLeafLambda::update_weights() {
             // meta.first = state, meta.second = eval value
             auto meta = move_history[t].get_metadata();
             delta_weight +=
-                    alpha * a * b * sech2(b * std::get<V_INDEX>(meta)) *
+                    alpha * model.a * model.b * sech2(model.b * std::get<V_INDEX>(meta)) *
                     model.phi[k](*std::get<STATE_INDEX>(meta), std::get<DEPTH_INDEX>(meta)) *
                     lambda_array[t];
         }

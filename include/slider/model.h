@@ -30,6 +30,8 @@ public:
 
 public:
     std::vector<evalf *> phi;
+    static constexpr double a = 1;
+    static constexpr double b = 1;
 private:
     std::vector<double> weights;
     const std::string fname;

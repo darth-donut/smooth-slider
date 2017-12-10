@@ -30,10 +30,9 @@ board_to_vector(const std::pair<size_t, size_t> board_coord) {
     return std::make_pair(board_coord.second, board_coord.first);
 }
 
-// tanh2(x) + sech2(x) = 1
 inline double
 sech2(double n) {
-    return 1 - std::pow(std::tanh(n), 2);
+    return 1.0 / std::pow(std::cosh(n), 2);
 }
 
 #endif //SLIDER_UTIL_H
