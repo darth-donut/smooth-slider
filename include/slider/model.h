@@ -17,10 +17,11 @@ class Slider;
 class Model {
 public:
     typedef double evalf(const Slider &, std::size_t);
+
     typedef std::unordered_map<std::string, evalf *> EvalDict;
     typedef std::vector<double>::size_type size_type;
 public:
-    Model() : phi({count_eval}), weights({1}), a(1), b(1) {}
+    Model() : phi({pieces_left}), weights({1}), a(1), b(1) {}
 
     Model(const std::string &model_file);
 
@@ -29,6 +30,7 @@ public:
     size_type size() const { return weights.size(); }
 
     void flush() const;
+
 public:
     std::vector<evalf *> phi;
     double a;
@@ -39,8 +41,15 @@ private:
     // phi function in string format
     std::vector<std::string> phis;
     const std::string fname;
-    EvalDict eval_dict = {{"count_eval", count_eval},
-                          {"block_eval", block_eval}};
+    EvalDict eval_dict = {
+            {"pieces_left",          pieces_left},
+            {"enemy_move_count",     enemy_move_count},
+            {"player_move_count",    player_move_count},
+            {"manhattan_dist",       manhattan_dist},
+            {"enemy_blocked_pieces", enemy_blocked_pieces},
+            {"unblockable_path",     unblockable_path},
+            {"straight_path_block",     straight_path_block}
+    };
 };
 
 

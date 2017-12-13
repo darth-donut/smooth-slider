@@ -1,0 +1,4 @@
+1
+pieces_left
+a:99
+b:1

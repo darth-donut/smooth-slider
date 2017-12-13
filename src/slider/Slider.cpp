@@ -11,8 +11,15 @@
 #include "slider/evaluation_functions/basic_eval.h"
 #include "util.h"
 
+const std::vector<SliderMove> Slider::moveset = {
+        SliderMove::Right,
+        SliderMove::Up,
+        SliderMove::Left,
+        SliderMove::Down
+};
 
-Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model)
+Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy,
+               Model *model)
         : agent(agent),
           size(size),
           board(size),
@@ -56,6 +63,17 @@ Slider::possible_moves() const {
     return potential_moves;
 }
 
+
+std::vector<Move>
+Slider::opponent_possible_moves() const {
+    auto save_player = player;
+    player = other_player(agent);
+    // player is now the opponent to this agent, return the possible moves for that state
+    auto ret_val = possible_moves();
+    player = save_player;
+    return ret_val;
+}
+
 bool
 Slider::is_leaf() const {
     // if either player won - it's a terminal node
@@ -79,7 +97,7 @@ Slider::is_leaf() const {
 
 void
 Slider::next_move(Move &move) {
-    auto ret_val = strategy->next_move(*this, compound_eval);
+    auto ret_val = strategy->next_move(*this, evaluate);
     assert(ret_val.second);
     assert(ret_val.first.get_player() == agent);
     // remember to update our own board!

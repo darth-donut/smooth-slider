@@ -20,6 +20,8 @@ class Model;
 
 class Slider {
 public:
+    static const std::vector<SliderMove> moveset;
+public:
     Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model);
 
     /// updates the board according to provided move
@@ -37,6 +39,11 @@ public:
     /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
     /// \return a list of possible movements from current state
     std::vector<Move> possible_moves() const;
+
+    /// with the current board state, returns a vector of possible moves for the enemy
+    /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
+    /// \return a list of possible movements from current state
+    std::vector<Move> opponent_possible_moves() const;
 
 
     /// return a boolean to indicate if this state is already at its final state
@@ -83,12 +90,6 @@ protected:
     mutable SliderPlayer player;
     // Which player is this agent representing (this is always a constant)
     const SliderPlayer agent;
-    std::vector<SliderMove> moveset{
-            SliderMove::Right,
-            SliderMove::Up,
-            SliderMove::Left,
-            SliderMove::Down
-    };
     Strategy<Move, Slider> *strategy;
     Model *model;
 };

@@ -32,10 +32,12 @@ Trainer::play_games() {
     Model bob(Resource::bob_model);
     model_mutex.unlock();
     // end of critical section
+    Model alice(Resource::alice_model);
 
     Referee referee(
             std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1, &bob),
-            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &bob),
+//            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
+            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
             board_size);
     auto winner = referee.start_game();
     if (!winner.second) {       // if it wasn't a draw
