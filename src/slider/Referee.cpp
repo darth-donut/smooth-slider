@@ -16,7 +16,7 @@
 std::pair<SliderPlayer, bool>
 Referee::start_game(bool disp_interm) {
     using std::swap;
-    while (!slider_board.has_winner() && !draw_game() && has_moves_left()) {
+    while (!slider_board.has_winner() && !draw_game() && moves_made < max_moves_allowed){
         Move pending_move;
         current_player->next_move(pending_move);
         gather_statistics(pending_move);
@@ -29,7 +29,7 @@ Referee::start_game(bool disp_interm) {
             std::cout << slider_board  << std::endl;
         }
     }
-    return std::make_pair(slider_board.get_winner(), draw_game() || !has_moves_left());
+    return std::make_pair(slider_board.get_winner(), draw_game() || moves_made >= max_moves_allowed);
 }
 
 void
@@ -67,7 +67,7 @@ Referee::update() {
     if (window->isOpen()) {
         window->clear();
         using std::swap;
-        if (!slider_board.has_winner() && !draw_game() && has_moves_left()) {
+        if (!slider_board.has_winner() && !draw_game() && moves_made < max_moves_allowed) {
             Move pending_move;
             current_player->next_move(pending_move);
             if (current_player->ready_to_move()) {
@@ -80,6 +80,7 @@ Referee::update() {
                 // there maybe an error message saying "illegal move! from the prev frame"
                 // tell window that we don't need that anymore
                 window->display_error(false);
+                ++moves_made;
             } else {
                 if (pending_move.is_bad_move()) {
                     // explicitly tell window to display error message associated with the bad move

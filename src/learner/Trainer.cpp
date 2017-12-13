@@ -13,12 +13,28 @@
 
 void
 Trainer::begin_training() {
-    std::thread games[ngames];
-    for (auto &game : games) {
-        game = std::thread(&Trainer::play_games, this);
+    constexpr size_t nthreads = 4;
+    auto rounds = ngames / nthreads;
+    auto extras = ngames % nthreads;
+
+    for (size_t i = 0; i < rounds; ++i) {
+        std::thread games[nthreads];
+        for (auto &game : games) {
+            game = std::thread(&Trainer::play_games, this);
+        }
+        for (auto &game : games) {
+            game.join();
+        }
     }
-    for (auto &game : games) {
-        game.join();
+
+    if (extras > 0) {
+        std::thread games[extras];
+        for (auto &game : games) {
+            game = std::thread(&Trainer::play_games, this);
+        }
+        for (auto &game : games) {
+            game.join();
+        }
     }
 }
 

@@ -89,15 +89,6 @@ private:
     void draw_gui();
 
     void gather_statistics(const Move &move);
-
-    /// only increment moves_made if it's below the threshold moves allowed
-    bool has_moves_left() {
-        if (moves_made >= max_moves_allowed) {
-            return false;
-        }
-        ++moves_made;
-        return true;
-    }
 };
 
 

@@ -10,14 +10,14 @@
 #include "slider/Referee.h"
 #include "model.h"
 
-#define SLIDER_GUI_TOGG 1
+#define SLIDER_GUI_TOGG 0
 
 void play_games(std::size_t board_size, SliderPlayer starting_player);
 
 
 int
 main() {
-    constexpr std::size_t board_size = 4;
+    constexpr std::size_t board_size = 7;
     SliderPlayer starting_player = SliderPlayer::Horizontal;
 
 #if SLIDER_GUI_TOGG
@@ -43,7 +43,7 @@ main() {
         referee.update();
     }
 #else
-    Trainer train_model(board_size, starting_player, 1);
+    Trainer train_model(board_size, starting_player, 100);
     train_model.begin_training();
 #endif
     return 0;
