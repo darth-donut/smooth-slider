@@ -45,4 +45,4 @@ target_link_libraries(${EXE} ${SFML_LIBRARIES})
 find_package(Threads REQUIRED)
 target_link_libraries(${EXE} ${CMAKE_THREAD_LIBS_INIT})
 
-set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")
