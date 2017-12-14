@@ -40,7 +40,7 @@ Trainer::begin_training() {
 
 void
 Trainer::play_games() {
-    Minimax<Move, Slider> ai_strategy1{4};
+    Minimax<Move, Slider> ai_strategy1{7};
     Minimax<Move, Slider> ai_strategy2{5};
 
     // file maybe updated, critical section
