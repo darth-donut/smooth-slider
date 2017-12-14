@@ -71,7 +71,7 @@ public:
     /// calling this method
     /// \return
     SliderPlayer get_winner() const {
-        hori_piece_positions.empty() ? SliderPlayer::Horizontal : SliderPlayer::Vertical;
+        return hori_piece_positions.empty() ? SliderPlayer::Horizontal : SliderPlayer::Vertical;
     }
 
     /// returns true if there's a winner. I.e. either all horizontal pieces or vertical pieces have gone over the

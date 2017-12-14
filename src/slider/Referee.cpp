@@ -28,6 +28,7 @@ Referee::start_game(bool disp_interm) {
         if (disp_interm) {
             std::cout << slider_board  << std::endl;
         }
+        ++moves_made;
     }
     return std::make_pair(slider_board.get_winner(), draw_game() || moves_made >= max_moves_allowed);
 }
