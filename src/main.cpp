@@ -26,10 +26,14 @@ main() {
     SliderRenderWindow window(sf::VideoMode(800, 550), "Slider", sf::Style::Titlebar | sf::Style::Close, settings);
     Minimax<Move, Slider> ai_strategy{7};
     Model bob(Resource::bob_model);
+
+    // board setup
+    Board board(board_size);
+
     Referee referee(
-            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy, &bob),
-            std::shared_ptr<Slider>(new SliderGUI(SliderPlayer::Horizontal, board_size, starting_player, window)),
-            board_size,
+            std::make_shared<Slider>(SliderPlayer::Vertical, board, starting_player, &ai_strategy, &bob),
+            std::shared_ptr<Slider>(new SliderGUI(SliderPlayer::Horizontal, board, starting_player, window)),
+            board,
             &window);
 
     while (window.isOpen()) {
@@ -44,7 +48,7 @@ main() {
         referee.update();
     }
 #else
-    Trainer train_model(board_size, starting_player, 10);
+    Trainer train_model(board_size, starting_player, 1);
     train_model.begin_training();
 #endif
     return 0;

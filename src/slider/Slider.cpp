@@ -18,11 +18,11 @@ const std::vector<SliderMove> Slider::moveset = {
         SliderMove::Down
 };
 
-Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy,
+Slider::Slider(SliderPlayer agent, const Board& board, SliderPlayer player, Strategy<Move, Slider> *strategy,
                Model *model)
         : agent(agent),
           size(size),
-          board(size),
+          board(board),
           player(player),
           strategy(strategy),
           model(model) {}

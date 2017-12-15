@@ -16,13 +16,15 @@
 
 template<typename T, typename S>
 class Strategy;
+
 class Model;
 
 class Slider {
 public:
     static const std::vector<SliderMove> moveset;
 public:
-    Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model);
+    Slider(SliderPlayer agent, const Board &board, SliderPlayer player, Strategy<Move, Slider> *strategy,
+           Model *model);
 
     /// updates the board according to provided move
     /// \param move Move to make

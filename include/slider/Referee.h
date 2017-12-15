@@ -13,26 +13,27 @@
 #include <slider/gui/slider_render_window.h>
 
 #include "Slider.h"
+#include "Board.h"
 
 class Referee {
 public:
     Referee(std::shared_ptr<Slider> p1,
             std::shared_ptr<Slider> p2,
-            Board::size_type n,
+            const Board& board,
             bool gather_stats = true)
             : p1(std::move(p1)),
               p2(std::move(p2)),
-              slider_board(n),
+              slider_board(board),
               statistics_mode(gather_stats) { assign_players(); }
 
     Referee(std::shared_ptr<Slider> p1,
             std::shared_ptr<Slider> p2,
-            Board::size_type n,
+            const Board& board,
             SliderRenderWindow *window,
             bool gather_stats = true)
             : p1(std::move(p1)),
               p2(std::move(p2)),
-              slider_board(n),
+              slider_board(board),
               window(window),
               statistics_mode(gather_stats) {
         assign_players();

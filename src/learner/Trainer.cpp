@@ -8,6 +8,7 @@
 #include <slider/model.h>
 #include <thread>
 #include <slider/td_leaf_lambda.h>
+#include <slider/io/SliderIO.h>
 #include "learner/Trainer.h"
 
 
@@ -50,12 +51,15 @@ Trainer::play_games() {
     // end of critical section
     Model alice(Resource::alice_model);
 
+    // board design
+    Board board(board_size);
+
     Referee referee(
-            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1, &bob),
-//            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
-            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
-            board_size);
-    auto winner = referee.start_game();
+            std::make_shared<Slider>(SliderPlayer::Vertical, board, starting_player, &ai_strategy1, &bob),
+//            std::make_shared<Slider>(SliderPlayer::Horizontal, oss.str(), starting_player, &ai_strategy2, &alice),
+            std::make_shared<Slider>(SliderPlayer::Horizontal, board, starting_player, &ai_strategy2, &alice),
+            board);
+    auto winner = referee.start_game(true);
     if (!winner.second) {       // if it wasn't a draw
         std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
         TDLeafLambda td_trainer(bob, model_mutex, referee.get_p1_stats());

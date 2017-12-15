@@ -9,14 +9,15 @@
 #include <string>
 
 #include "Slider.h"
+#include "Board.h"
 
 
 /// Slider IO is a kind of Slider, wherein the method next_move() is overridden to taking input from I/O,
 /// everything else is derived from Slider itself.
 class SliderIO : public Slider {
 public:
-    SliderIO(SliderPlayer agent, size_t size, SliderPlayer player)
-        : Slider(agent, size, player, nullptr, nullptr) {}
+    SliderIO(SliderPlayer agent, const Board &board, SliderPlayer player)
+        : Slider(agent, board, player, nullptr, nullptr) {}
 
     void next_move(Move &mve) override;
 
