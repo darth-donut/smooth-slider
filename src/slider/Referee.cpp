@@ -126,6 +126,8 @@ Referee::draw_gui() {
                     break;
                 case SliderPiece::Block:
                     piece.setPointCount(4); // make square instead
+                    piece.rotate(45);
+                    piece.scale(1.5, 1.5);
                     piece.setFillColor(sf::Color::Black);
                     break;
             }
