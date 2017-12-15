@@ -24,7 +24,9 @@ Referee::start_game(bool disp_interm) {
         slider_board.make_move(pending_move);
         // inform other player that we've updated the board
         other_player->update(pending_move);
-        swap(current_player, other_player);
+        if (!other_player->possible_moves().empty()) {
+            swap(current_player, other_player);
+        }
         if (disp_interm) {
             std::cout << slider_board  << std::endl;
         }
@@ -77,7 +79,9 @@ Referee::update() {
                 slider_board.make_move(pending_move);
                 // inform other player that we've updated the board
                 other_player->update(pending_move);
-                swap(current_player, other_player);
+                if (!other_player->possible_moves().empty()) {
+                    swap(current_player, other_player);
+                }
                 // there maybe an error message saying "illegal move! from the prev frame"
                 // tell window that we don't need that anymore
                 window->display_error(false);
