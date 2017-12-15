@@ -109,17 +109,17 @@ Referee::draw_gui() {
             sf::RectangleShape box(sf::Vector2f(box_size, box_size));
             box.setPosition(pos);
             if ((j + i) % 2) {
-                box.setFillColor(sf::Color::Green);
+                box.setFillColor(sf::Color::Yellow);
             } else {
                 box.setFillColor(sf::Color::White);
             }
             window->draw(box);
             // draw board piece if there is one (incl blocks)
-            sf::CircleShape piece(box_size / 3, 7);
+            sf::CircleShape piece(box_size / 3);
             piece.setOrigin(box_size / 3, box_size / 3);
             switch (slider_board[j][i]) {
                 case SliderPiece::Horizontal:
-                    piece.setFillColor(sf::Color::Magenta);
+                    piece.setFillColor(sf::Color::Green);
                     break;
                 case SliderPiece::Vertical:
                     piece.setFillColor(sf::Color::Cyan);

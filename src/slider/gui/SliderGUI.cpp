@@ -80,4 +80,3 @@ SliderGUI::player_piece_clicked(Board::size_type x, Board::size_type y) const {
     return board[translated.first][translated.second] == player_piece;
 }
 
-
