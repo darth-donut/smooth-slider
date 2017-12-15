@@ -20,8 +20,10 @@ main() {
     SliderPlayer starting_player = SliderPlayer::Horizontal;
 
 #if SLIDER_GUI_TOGG
-    // GUI interface
-    SliderRenderWindow window(sf::VideoMode(800, 550), "Slider");
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8; // 8x AA
+//     GUI interface
+    SliderRenderWindow window(sf::VideoMode(800, 550), "Slider", sf::Style::Titlebar | sf::Style::Close, settings);
     Minimax<Move, Slider> ai_strategy{7};
     Model bob(Resource::bob_model);
     Referee referee(
