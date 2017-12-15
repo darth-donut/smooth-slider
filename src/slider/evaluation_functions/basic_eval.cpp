@@ -84,7 +84,7 @@ manhattan_dist(const Slider &state, size_t) {
         }
 
     }
-    return distance;
+    return -distance;
 }
 
 double
