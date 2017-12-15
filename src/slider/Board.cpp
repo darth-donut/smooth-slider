@@ -8,12 +8,16 @@
 #include <iostream>
 #include <unordered_set>
 #include <cassert>
+#include <random>
 
 #include "Slider.h"
 #include "commons/util.h"
 
+#define MAX_BLOCKS 3    // 0 - 3 blocks allowed
 
-Board::Board(size_type size) : bsize(size) {
+
+
+Board::Board(size_type size, bool blocks) : bsize(size) {
     // the board is never filled, need to let it know its bsize in advance
     board.resize(size);
     for (int i = 0; i != size; ++i) {
@@ -25,6 +29,10 @@ Board::Board(size_type size) : bsize(size) {
 
     // init player positions
     initialize_piece_positions();
+
+    if (blocks) {
+        randomize_blocks();
+    }
 }
 
 
@@ -197,5 +205,21 @@ Board::update_piece_positions(const Move &move) {
     if (!is_edge_move(move)) {
         // if it wasn't an edge move => the piece still remains on the board - put it(updated) back to the board
         hash_set.insert(move.apply_move());
+    }
+}
+
+void
+Board::randomize_blocks() {
+    std::random_device rd;
+    std::mt19937 mt(rd());
+    std::uniform_int_distribution<size_type> block_dist(0, MAX_BLOCKS + 1);
+    std::uniform_int_distribution<size_type> x_gen(0, bsize - 2);
+    std::uniform_int_distribution<size_type> y_gen(1, bsize - 1);
+    size_t blocks = block_dist(mt);
+    for (auto i = 0; i < blocks; ++i) {
+        size_type x = x_gen(mt);
+        size_type y = y_gen(mt);
+        assert(board[x][y] == SliderPiece::Blank || board[x][y] == SliderPiece::Block);
+        board[x][y] = SliderPiece::Block;
     }
 }

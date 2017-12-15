@@ -41,7 +41,8 @@ public:
 
     /// Creates a board of size - size x size with initial configurations
     /// \param size size of board ( a size x size board)
-    explicit Board(size_type);
+    /// \param blocks true if the board should randomize block positions
+    explicit Board(size_type size, bool blocks = true);
 
     /// Makes a specified move. Returns boolean to indicate move status
     /// \param move Move to make
@@ -116,6 +117,9 @@ private:
     /// to make sure that the move is legal!
     /// \param move A legal move that will update internal hash set
     void update_piece_positions(const Move &move);
+
+    /// creates random blocks in the board
+    void randomize_blocks();
 };
 
 
