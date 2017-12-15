@@ -212,7 +212,7 @@ void
 Board::randomize_blocks() {
     std::random_device rd;
     std::mt19937 mt(rd());
-    std::uniform_int_distribution<size_type> block_dist(0, MAX_BLOCKS + 1);
+    std::uniform_int_distribution<size_type> block_dist(0, MAX_BLOCKS);
     std::uniform_int_distribution<size_type> x_gen(0, bsize - 2);
     std::uniform_int_distribution<size_type> y_gen(1, bsize - 1);
     size_t blocks = block_dist(mt);
