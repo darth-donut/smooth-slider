@@ -6,25 +6,34 @@
 #include <cmath>
 #include <queue>
 #include <unordered_set>
+#include <tuple>
 
 #include "basic_eval.h"
 #include "model.h"
 #include "Move.h"
 #include "util.h"
+#include "Board.h"
+
 
 static double f(double a, double b, double score);
+/// calculates the distance needed for all agent's pieces to move towards the edge of the board (to win).
+/// Ignores enemy movement when doing so. When a piece has NO MOVE AT ALL to make (i.e. completely surrounded),
+/// that piece incurrs a penalty score of board size * 3 (arbitrary). Therefore, the returned value from this
+/// function cannot be assumed to be the ABSOLUTE CORRECT manhattan distance when there's a complete block at least
+/// on one of the pieces.
+/// \param state current state
+/// \param agent agent to calculate the distance for
+/// \return (true) distance (if there's no pieces with totally blocked path)
+static double calc_manhattan_dist(const Slider& state, SliderPlayer agent);
 
-static double
-f(double a, double b, double score) {
-    return a * std::tanh(b * score);
-}
 
 double
 pieces_left(const Slider &state, size_t) {
     auto agent = state.get_agent();
     auto pieces_left = state.get_board().get_piece_positions(agent).size();
-    // the LESS pieces left, the better.
-    return (state.get_board().size() - 1) - pieces_left;
+    auto opponent_left = state.get_board().get_piece_positions(other_player(agent)).size();
+    // the LESS pieces left, the better. (the MORE enemy left the better)
+    return opponent_left - pieces_left;
 }
 
 double
@@ -43,48 +52,10 @@ player_move_count(const Slider &state, size_t) {
 
 double
 manhattan_dist(const Slider &state, size_t) {
-    double distance = 0;
     auto agent = state.get_agent();
-    const auto all_coords = state.get_board().get_piece_positions(agent);
-
-    for (const auto &start_node : all_coords) {
-        auto player_coordinates = std::queue<std::pair<Move::Coordinate, size_t>>();
-        std::unordered_set<Move::Coordinate> visited;
-        // the starting node always has distance 0 from start
-        player_coordinates.push({start_node, 0});
-
-        // start bfs on start_node as starting point
-        while (!player_coordinates.empty()) {
-            const auto node = player_coordinates.front();
-            player_coordinates.pop();
-            visited.insert(node.first);
-            // for each neighbour to node:
-            for (const auto &move : Slider::moveset) {
-                if ((agent == SliderPlayer::Vertical && move == SliderMove::Down) ||
-                    (agent == SliderPlayer::Horizontal && move == SliderMove::Left)) {
-                    // these move-sets aren't allowed!
-                    continue;
-                }
-                Move possible_move(agent, move, node.first);
-                // if the move is legal (i.e. it's node's current neighbour node), add the new
-                // coordinate to player_coordinates ONLY IF it's not been visited before
-                if (state.get_board().is_legal(possible_move)) {
-                    // if we've reached the destination node, add the total tallied distance to "distance"
-                    if (state.get_board().is_edge_move(possible_move)) {
-                        distance += (node.second + 1);
-                        break;
-                    }
-                    auto new_coord = possible_move.apply_move();
-                    if (visited.find(new_coord) == visited.cend()) {
-                        // neighbouring nodes have distance node.second + 1 (current depth + 1)
-                        player_coordinates.push({new_coord, node.second + 1});
-                    }
-                }
-            }
-        }
-
-    }
-    return -distance;
+    auto agent_distance = calc_manhattan_dist(state, agent);
+    auto opponent_distance = calc_manhattan_dist(state, other_player(agent));
+    return opponent_distance - agent_distance;
 }
 
 double
@@ -149,6 +120,66 @@ evaluate(const Slider &state, size_t depth) {
         // function * weight
         score += (model->phi[i](state, depth) * (*model)[i]);
     }
-    score *= (1 - (depth * 1.0) / (depth + 1));
+//    score *= (1 - (depth * 1.0) / (depth + 1));
     return f(state.get_model()->a, state.get_model()->b, score);
+}
+
+static double
+calc_manhattan_dist(const Slider& state, SliderPlayer agent) {
+    double distance = 0;
+    const auto all_coords = state.get_board().get_piece_positions(agent);
+
+    for (const auto &start_node : all_coords) {
+        std::queue<std::tuple<Move::Coordinate, size_t, Board>> queue;
+        std::unordered_set<Move::Coordinate> visited;
+        // the starting node always has distance 0 from start
+        queue.push(std::make_tuple(start_node, 0, state.get_board()));
+        bool finish = false;
+
+        // start bfs on start_node as starting point
+        while (!queue.empty() && !finish) {
+            const auto node = queue.front();
+            queue.pop();
+            visited.insert(std::get<0>(node));
+            unsigned char declined = 0;
+
+            // for each neighbour to node:
+            for (const auto &move : Slider::moveset) {
+                if ((agent == SliderPlayer::Vertical && move == SliderMove::Down) ||
+                    (agent == SliderPlayer::Horizontal && move == SliderMove::Left)) {
+                    // these move-sets aren't allowed!
+                    continue;
+                }
+                Move possible_move(agent, move, std::get<0>(node));
+                // if the move is legal (i.e. it's node's current neighbour node), add the new
+                // coordinate to queue ONLY IF it's not been visited before
+                if (std::get<2>(node).is_legal(possible_move)) {
+                    // if we've reached the destination node, add the total tallied distance to "distance"
+                    if (std::get<2>(node).is_edge_move(possible_move)) {
+                        distance += (std::get<1>(node) + 1);
+                        finish = true;
+                        break;
+                    }
+                    auto new_coord = possible_move.apply_move();
+                    if (visited.find(new_coord) == visited.cend()) {
+                        // neighbouring nodes have distance node.second + 1 (current depth + 1)
+                        Board new_board(std::get<2>(node));
+                        new_board.make_move(possible_move);     // already confirmed that the move is legal
+                        queue.push(std::make_tuple(new_coord, std::get<1>(node) + 1, std::move(new_board)));
+                    }
+                } else {
+                    if (++declined >= 3) {
+                        // penalty - this piece is completely blocked
+                        distance += state.get_board().size() * 3;
+                    }
+                }
+            }
+        }
+    }
+    return distance;
+}
+
+static double
+f(double a, double b, double score) {
+    return a * std::tanh(b * score);
 }

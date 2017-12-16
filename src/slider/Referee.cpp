@@ -28,6 +28,7 @@ Referee::start_game(bool disp_interm) {
             swap(current_player, other_player);
         }
         if (disp_interm) {
+            std::cout << std::string(20, '=') << std::endl;
             std::cout << slider_board  << std::endl;
         }
         ++moves_made;

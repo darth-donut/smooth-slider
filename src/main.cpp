@@ -10,13 +10,13 @@
 #include "slider/Referee.h"
 #include "model.h"
 
-#define SLIDER_GUI_TOGG 1
+#define SLIDER_GUI_TOGG 0
 
 
 
 int
 main() {
-    constexpr std::size_t board_size = 7;
+    constexpr std::size_t board_size = 4;
     SliderPlayer starting_player = SliderPlayer::Horizontal;
 
 #if SLIDER_GUI_TOGG

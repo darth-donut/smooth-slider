@@ -1,10 +1,10 @@
-2
-2
+1.11244
+-0.639633
+-5.14203
 1
-2
+0.991254
 1
-1
-1
+-1.87956
 pieces_left
 enemy_move_count
 player_move_count
@@ -12,5 +12,5 @@ manhattan_dist
 enemy_blocked_pieces
 unblockable_path
 straight_path_block
-a:99
-b:0.027
+a:1
+b:0.37

@@ -13,7 +13,7 @@
 #include "Slider.h"
 #include "commons/util.h"
 
-#define MAX_BLOCKS 3    // 0 - 3 blocks allowed
+#define MAX_BLOCKS 2    // 0 - 2 blocks allowed
 
 
 

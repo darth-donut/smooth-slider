@@ -81,7 +81,7 @@ public:
     bool has_winner() const { return hori_piece_positions.empty() || vert_piece_positions.empty(); }
 
     /// Tells if the move requested by player is to slide player's piece over the board (i.e. the piece got to the goal)
-    /// \param move assumes that this move is a legal move (i.e. is_legal(move)) is called beore is_edge_move is called
+    /// \param move assumes that this move is a legal move (i.e. is_legal(move)) is called before is_edge_move is called
     /// \return True if the player requested a 'goal' move false otherwise
     bool is_edge_move(const Move &move) const {
         return move.get_player() == SliderPlayer::Vertical
