@@ -9,6 +9,7 @@
 #include <thread>
 
 #include "slider/td_leaf_lambda.h"
+#include "agents/basic/forward_slider.h"
 #include "agents/io/SliderIO.h"
 #include "learner/Trainer.h"
 
@@ -43,22 +44,19 @@ Trainer::begin_training() {
 void
 Trainer::play_games() {
     Minimax<Move, Slider> ai_strategy1{7};
-    Minimax<Move, Slider> ai_strategy2{5};
 
     // file maybe updated, critical section
     model_mutex.lock();
     Model bob(Resource::bob_model);
     model_mutex.unlock();
     // end of critical section
-    Model alice(Resource::alice_model);
 
     // board design
     Board board(board_size);
 
     Referee referee(
             std::make_shared<Slider>(SliderPlayer::Vertical, board, starting_player, &ai_strategy1, &bob),
-//            std::make_shared<Slider>(SliderPlayer::Horizontal, oss.str(), starting_player, &ai_strategy2, &alice),
-            std::make_shared<Slider>(SliderPlayer::Horizontal, board, starting_player, &ai_strategy2, &alice),
+            std::make_shared<ForwardSlider>(SliderPlayer::Horizontal, board, starting_player),
             board);
     auto winner = referee.start_game();
     if (!winner.second) {       // if it wasn't a draw

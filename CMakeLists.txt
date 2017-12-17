@@ -33,7 +33,7 @@ set(SOURCE_FILES
         include/slider/model.h
         include/commons/resource.h
         src/learner/Trainer.cpp
-        include/learner/Trainer.h)
+        include/learner/Trainer.h src/agents/basic/forward_slider.cpp include/agents/basic/forward_slider.h)
 
 include_directories(include/
         include/commons

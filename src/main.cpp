@@ -4,6 +4,7 @@
 #include <slider/td_leaf_lambda.h>
 #include <learner/Trainer.h>
 
+#include "agents/basic/forward_slider.h"
 #include "agents/gui/slider_render_window.h"
 #include "agents/io/SliderIO.h"
 #include "agents/gui/SliderGUI.h"
@@ -32,7 +33,7 @@ main() {
 
     Referee referee(
             std::make_shared<Slider>(SliderPlayer::Vertical, board, starting_player, &ai_strategy, &bob),
-            std::shared_ptr<Slider>(new SliderGUI(SliderPlayer::Horizontal, board, starting_player, window)),
+            std::make_shared<SliderGUI>(SliderPlayer::Horizontal, board, starting_player, window),
             board,
             &window);
 

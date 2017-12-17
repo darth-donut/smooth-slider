@@ -19,6 +19,9 @@ Referee::start_game(bool disp_interm) {
     while (!slider_board.has_winner() && !draw_game() && moves_made < max_moves_allowed){
         Move pending_move;
         current_player->next_move(pending_move);
+        if (pending_move.is_bad_move()) {
+            throw std::runtime_error("Current player has bad move. Panic!");
+        }
         gather_statistics(pending_move);
         // we can be 100% sure it's a legal move because next_move() of slider always checks for illegal moves.
         slider_board.make_move(pending_move);
@@ -26,6 +29,9 @@ Referee::start_game(bool disp_interm) {
         other_player->update(pending_move);
         if (!other_player->possible_moves().empty()) {
             swap(current_player, other_player);
+        } else {
+            current_player->return_round();
+            other_player->lose_round();
         }
         if (disp_interm) {
             std::cout << std::string(20, '=') << std::endl;
@@ -72,6 +78,7 @@ Referee::update() {
         window->clear();
         using std::swap;
         if (!slider_board.has_winner() && !draw_game() && moves_made < max_moves_allowed) {
+            std::cout << get_cstr(current_player->get_agent()) << "'s turn to move" << std::endl;
             Move pending_move;
             current_player->next_move(pending_move);
             if (current_player->ready_to_move()) {
@@ -82,6 +89,9 @@ Referee::update() {
                 other_player->update(pending_move);
                 if (!other_player->possible_moves().empty()) {
                     swap(current_player, other_player);
+                } else {
+                    current_player->return_round();
+                    other_player->lose_round();
                 }
                 // there maybe an error message saying "illegal move! from the prev frame"
                 // tell window that we don't need that anymore
@@ -92,6 +102,15 @@ Referee::update() {
                     // explicitly tell window to display error message associated with the bad move
                     window->err_msg(pending_move.get_err_msg());
                 }  // else, it means user hasn't specified any kind of input
+            }
+        } else {
+            if (slider_board.has_winner()) {
+                // todo: display this on window instead of terminal
+                std::cout << "Winner: " << get_cstr(slider_board.get_winner()) << std::endl;
+            } else if (draw_game()) {
+                std::cout << "Game ended in a draw!" << std::endl;
+            } else {
+                std::cout << "Move limit reached!" << std::endl;
             }
         }
         draw_gui();
@@ -151,4 +170,3 @@ Referee::gather_statistics(const Move &move) {
         }
     }
 }
-

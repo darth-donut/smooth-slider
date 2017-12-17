@@ -100,6 +100,9 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/agents/basic/forward_slider.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/agents/gui/SliderGUI.h">
 			<Option target="slider"/>
 		</Unit>
@@ -146,6 +149,9 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/td_leaf_lambda.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/agents/basic/forward_slider.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/agents/gui/SliderGUI.cpp">

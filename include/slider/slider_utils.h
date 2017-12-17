@@ -18,5 +18,12 @@ enum class SliderPlayer : char {
     Vertical, Horizontal
 };
 
+inline const char*
+get_cstr(SliderPlayer player) {
+    return player == SliderPlayer::Horizontal
+           ? "Horizontal"
+           : "Vertical";
+}
+
 #endif //SLIDER_SLIDER_UTILS_H
 

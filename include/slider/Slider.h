@@ -74,6 +74,14 @@ public:
     /// \return const pointer(low-level const) to model that is attached to this slider player.
     Model *const get_model() const { return model; }
 
+    /// returns the hand to this player because the opponent has no valid moves left to make
+    /// side effect: returns hand to this player internally
+    void return_round() { player = agent; }
+    /// returns the hand to this player because the opponent has no valid moves left to make
+
+    /// opposite of return_round. This player loses this round
+    void lose_round() { player = other_player(agent); }
+
     /// next move this player is going to make (also automatically updates the board state internally)
     /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
     /// \param move this slider player wants to make
