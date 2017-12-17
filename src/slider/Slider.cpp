@@ -90,6 +90,10 @@ Slider::next_move(Move &move) {
     auto ret_val = strategy->next_move(*this, evaluate);
     assert(ret_val.second);
     assert(ret_val.first.get_player() == agent);
+    if (!ret_val.second || ret_val.first.get_player() != agent) {
+        // should never happen, referee takes care of this for us
+        ret_val.first.error("Player has no valid move. Panic!");
+    }
     // remember to update our own board!
     update(ret_val.first);
     move = ret_val.first;

@@ -9,6 +9,7 @@
 #include <vector>
 #include <limits>
 #include <tuple>
+#include <cassert>
 
 #include "Strategy.h"
 #include "Move.h"
@@ -105,6 +106,7 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
         }
         alpha = std::max(alpha, v);
     }
+    assert(principal_var != nullptr);
     return std::make_tuple(principal_var, v, principal_depth);
 }
 
@@ -131,6 +133,7 @@ Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_
         }
         beta = std::min(beta, v);
     }
+    assert(principal_var != nullptr);
     return std::make_tuple(principal_var, v, principal_depth);
 }
 

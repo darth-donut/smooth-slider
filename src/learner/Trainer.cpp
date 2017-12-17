@@ -16,7 +16,7 @@
 
 void
 Trainer::begin_training() {
-    constexpr size_t nthreads = 4;
+    constexpr size_t nthreads = 6;
     auto rounds = ngames / nthreads;
     auto extras = ngames % nthreads;
 

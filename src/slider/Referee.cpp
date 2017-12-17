@@ -17,7 +17,10 @@ std::pair<SliderPlayer, bool>
 Referee::start_game(bool disp_interm) {
     using std::swap;
     while (!slider_board.has_winner() && !draw_game() && moves_made < max_moves_allowed){
+        assert(current_player->get_agent() == current_player->get_player()
+               && current_player->get_agent() == other_player->get_player());
         Move pending_move;
+        assert(!current_player->possible_moves().empty());
         current_player->next_move(pending_move);
         if (pending_move.is_bad_move()) {
             throw std::runtime_error("Current player has bad move. Panic!");
