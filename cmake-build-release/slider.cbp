@@ -49,8 +49,9 @@
 					<Add directory="/home/jiahong/Documents/repository/slider/include/commons/ai"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/slider"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions"/>
-					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/gui"/>
-					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/io"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/agents"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/agents/gui"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/agents/io"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -79,8 +80,9 @@
 					<Add directory="/home/jiahong/Documents/repository/slider/include/commons/ai"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/slider"/>
 					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions"/>
-					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/gui"/>
-					<Add directory="/home/jiahong/Documents/repository/slider/include/slider/io"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/agents"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/agents/gui"/>
+					<Add directory="/home/jiahong/Documents/repository/slider/include/agents/io"/>
 					<Add directory="/usr/include/c++/5"/>
 					<Add directory="/usr/include/x86_64-linux-gnu/c++/5"/>
 					<Add directory="/usr/include/c++/5/backward"/>
@@ -98,6 +100,15 @@
 				</MakeCommands>
 			</Target>
 		</Build>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/agents/gui/SliderGUI.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/agents/gui/slider_render_window.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/include/agents/io/SliderIO.h">
+			<Option target="slider"/>
+		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/commons/ai/Strategy.h">
 			<Option target="slider"/>
 		</Unit>
@@ -128,15 +139,6 @@
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/evaluation_functions/basic_eval.h">
 			<Option target="slider"/>
 		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/gui/SliderGUI.h">
-			<Option target="slider"/>
-		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/gui/slider_render_window.h">
-			<Option target="slider"/>
-		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/io/SliderIO.h">
-			<Option target="slider"/>
-		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/model.h">
 			<Option target="slider"/>
 		</Unit>
@@ -144,6 +146,15 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/include/slider/td_leaf_lambda.h">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/agents/gui/SliderGUI.cpp">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/agents/gui/slider_render_window.cpp">
+			<Option target="slider"/>
+		</Unit>
+		<Unit filename="/home/jiahong/Documents/repository/slider/src/agents/io/SliderIO.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/commons/util.cpp">
@@ -168,15 +179,6 @@
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/evaluation_functions/basic_eval.cpp">
-			<Option target="slider"/>
-		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/SliderGUI.cpp">
-			<Option target="slider"/>
-		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/gui/slider_render_window.cpp">
-			<Option target="slider"/>
-		</Unit>
-		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/io/SliderIO.cpp">
 			<Option target="slider"/>
 		</Unit>
 		<Unit filename="/home/jiahong/Documents/repository/slider/src/slider/td_leaf_lambda.cpp">

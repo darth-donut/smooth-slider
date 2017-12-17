@@ -6,7 +6,7 @@
 #include <SFML/Window/Event.hpp>
 #include<cassert>
 
-#include "slider/gui/SliderGUI.h"
+#include "agents/gui/SliderGUI.h"
 #include "Board.h"
 #include "util.h"
 

@@ -7,8 +7,9 @@
 #include <slider/Referee.h>
 #include <slider/model.h>
 #include <thread>
-#include <slider/td_leaf_lambda.h>
-#include <slider/io/SliderIO.h>
+
+#include "slider/td_leaf_lambda.h"
+#include "agents/io/SliderIO.h"
 #include "learner/Trainer.h"
 
 

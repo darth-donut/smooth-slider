@@ -7,7 +7,7 @@
 #include <sstream>
 #include <string>
 
-#include "slider/io/SliderIO.h"
+#include "agents/io/SliderIO.h"
 #include "Move.h"
 
 #define ALPHA_START 65      // A

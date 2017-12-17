@@ -10,8 +10,8 @@
 #include <utility>
 #include <memory>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <slider/gui/slider_render_window.h>
 
+#include "agents/gui/slider_render_window.h"
 #include "Slider.h"
 #include "Board.h"
 

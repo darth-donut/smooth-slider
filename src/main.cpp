@@ -4,9 +4,9 @@
 #include <slider/td_leaf_lambda.h>
 #include <learner/Trainer.h>
 
-#include "slider/gui/slider_render_window.h"
-#include "slider/io/SliderIO.h"
-#include "slider/gui/SliderGUI.h"
+#include "agents/gui/slider_render_window.h"
+#include "agents/io/SliderIO.h"
+#include "agents/gui/SliderGUI.h"
 #include "slider/Referee.h"
 #include "model.h"
 
