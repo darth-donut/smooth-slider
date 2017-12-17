@@ -30,8 +30,8 @@ static double calc_manhattan_dist(const Slider& state, SliderPlayer agent);
 double
 pieces_left(const Slider &state, size_t) {
     auto agent = state.get_agent();
-    auto pieces_left = state.get_board().get_piece_positions(agent).size();
-    auto opponent_left = state.get_board().get_piece_positions(other_player(agent)).size();
+    double pieces_left = state.get_board().get_piece_positions(agent).size();
+    double opponent_left = state.get_board().get_piece_positions(other_player(agent)).size();
     // the LESS pieces left, the better. (the MORE enemy left the better)
     return opponent_left - pieces_left;
 }
@@ -39,7 +39,7 @@ pieces_left(const Slider &state, size_t) {
 double
 enemy_move_count(const Slider &state, size_t) {
     auto opponent = other_player(state.get_agent());
-    auto enemy_pieces_left = state.get_board().get_piece_positions(opponent).size();
+    double enemy_pieces_left = state.get_board().get_piece_positions(opponent).size();
     // each piece has only a max of 3 possible moves at any time.
     // (maybe lower, but never higher)
     return (enemy_pieces_left * 3) - state.opponent_possible_moves().size();
@@ -53,8 +53,8 @@ player_move_count(const Slider &state, size_t) {
 double
 manhattan_dist(const Slider &state, size_t) {
     auto agent = state.get_agent();
-    auto agent_distance = calc_manhattan_dist(state, agent);
-    auto opponent_distance = calc_manhattan_dist(state, other_player(agent));
+    double agent_distance = calc_manhattan_dist(state, agent);
+    double opponent_distance = calc_manhattan_dist(state, other_player(agent));
     return opponent_distance - agent_distance;
 }
 
@@ -124,6 +124,12 @@ evaluate(const Slider &state, size_t depth) {
     return f(state.get_model()->a, state.get_model()->b, score);
 }
 
+
+
+// todo:
+// 1) decrease total block penalty (will prefer to block over winnign!)
+// 2) bias multiplier when enemy dist > 0 but agent_dist = 0 (i.e. we won) ==> should score a little more (biasness)
+// 3) use simplified manhattan distance instead -> we're always going straight as the shortest path anyway (unless obstacle)
 static double
 calc_manhattan_dist(const Slider& state, SliderPlayer agent) {
     double distance = 0;

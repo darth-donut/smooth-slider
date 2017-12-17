@@ -16,7 +16,7 @@
 
 int
 main() {
-    constexpr std::size_t board_size = 4;
+    constexpr std::size_t board_size = 5;
     SliderPlayer starting_player = SliderPlayer::Horizontal;
 
 #if SLIDER_GUI_TOGG
@@ -48,7 +48,7 @@ main() {
         referee.update();
     }
 #else
-    Trainer train_model(board_size, starting_player, 1);
+    Trainer train_model(board_size, starting_player, 100);
     train_model.begin_training();
 #endif
     return 0;
