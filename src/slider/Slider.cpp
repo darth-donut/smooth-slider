@@ -81,18 +81,8 @@ Slider::is_leaf() const {
         board.get_piece_positions(SliderPlayer::Vertical).empty()) {
         return true;
     }
-
-    // temporarily 'fake' other player
-    player = other_player(player);
-    // see if opponent has no more moves left
-    auto opponent_no_moves = possible_moves().empty();
-    player = other_player(player);
-    // resume back to original player
-
-    // if BOTH has no moves left, return true => terminal node
-    return possible_moves().empty() && opponent_no_moves;
-
-
+    // if current round's player has no move left to make, then there's no child node
+    return possible_moves().empty();
 }
 
 void
