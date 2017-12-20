@@ -16,12 +16,11 @@
 
 void
 Trainer::begin_training() {
-    constexpr size_t nthreads = 6;
-    auto rounds = ngames / nthreads;
-    auto extras = ngames % nthreads;
+    auto rounds = ngames / threads;
+    auto extras = ngames % threads;
 
     for (size_t i = 0; i < rounds; ++i) {
-        std::thread games[nthreads];
+        std::thread games[threads];
         for (auto &game : games) {
             game = std::thread(&Trainer::play_games, this);
         }

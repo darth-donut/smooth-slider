@@ -23,11 +23,12 @@ TDLeafLambda::update_weights() {
     std::vector<double> lambda_array;
     for (int t = 0; t < move_history.size() - 1; ++t) {
         double t_lambda_sum = 0;
-        for (int i = t; i < move_history.size(); ++i) {
+        for (int i = t; i < move_history.size() - 1; ++i) {
             t_lambda_sum += std::pow(lambda, i - t) *
                             (std::get<V_INDEX>(move_history[i + 1].get_metadata()) -
                              std::get<V_INDEX>(move_history[i].get_metadata()));
         }
+//        std::cout << t_lambda_sum << std::endl;
         lambda_array.push_back(t_lambda_sum);
     }
 

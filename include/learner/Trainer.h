@@ -13,10 +13,11 @@
 
 class Trainer {
 public:
-    Trainer(std::size_t board_size, SliderPlayer starting_player, std::size_t ngames)
+    Trainer(std::size_t board_size, SliderPlayer starting_player, std::size_t ngames, std::size_t threads)
             : board_size(board_size),
               starting_player(starting_player),
-              ngames(ngames) {}
+              ngames(ngames),
+              threads(threads) {}
 
     void begin_training();
 
@@ -28,6 +29,7 @@ private:
     SliderPlayer starting_player;
     std::size_t ngames;
     std::mutex model_mutex;
+    std::size_t threads;
 };
 
 
