@@ -1,5 +1,5 @@
-1
-1
+10505.3
+-733.18
 pieces_left
 manhattan_dist
 a:99
