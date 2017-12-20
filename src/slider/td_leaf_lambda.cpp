@@ -16,7 +16,7 @@ TDLeafLambda::TDLeafLambda(Model &model,
           model_lock(model_lock),
           move_history(move_history) {}
 
-void
+const Model&
 TDLeafLambda::update_weights() {
     constexpr double alpha = .1;
     constexpr double lambda = .7;
@@ -47,5 +47,6 @@ TDLeafLambda::update_weights() {
         model[k] += delta_weight;
     }
     std::lock_guard<std::mutex> guard_flush(model_lock);
-    model.flush();
+    return model;
+//    model.flush();
 }

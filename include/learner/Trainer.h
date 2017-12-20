@@ -22,13 +22,15 @@ public:
     void begin_training();
 
 private:
-    void play_games();
+    void play_games(std::vector<Model> &model_vector);
+    void manage_games(size_t ngames);
 
 private:
     std::size_t board_size;
     SliderPlayer starting_player;
     std::size_t ngames;
     std::mutex model_mutex;
+    std::mutex vector_lock;
     std::size_t threads;
 };
 

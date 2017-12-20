@@ -19,7 +19,7 @@ public:
     static constexpr size_t DEPTH_INDEX = Minimax<Slider, Move>::DEPTH_INDEX;
     static constexpr size_t STATE_INDEX = Minimax<Slider, Move>::STATE_INDEX;
     TDLeafLambda(Model& model, std::mutex& model_lock, const std::vector<Move>& move_history);
-    void update_weights();
+    const Model& update_weights();
 
 private:
     const std::vector<Move>& move_history;

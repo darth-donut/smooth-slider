@@ -10,7 +10,6 @@
 
 #include "slider/td_leaf_lambda.h"
 #include "agents/basic/forward_slider.h"
-#include "agents/io/SliderIO.h"
 #include "learner/Trainer.h"
 
 
@@ -18,30 +17,16 @@ void
 Trainer::begin_training() {
     auto rounds = ngames / threads;
     auto extras = ngames % threads;
-
     for (size_t i = 0; i < rounds; ++i) {
-        std::thread games[threads];
-        for (auto &game : games) {
-            game = std::thread(&Trainer::play_games, this);
-        }
-        for (auto &game : games) {
-            game.join();
-        }
+        manage_games(threads);
     }
-
     if (extras > 0) {
-        std::thread games[extras];
-        for (auto &game : games) {
-            game = std::thread(&Trainer::play_games, this);
-        }
-        for (auto &game : games) {
-            game.join();
-        }
+        manage_games(extras);
     }
 }
 
 void
-Trainer::play_games() {
+Trainer::play_games(std::vector<Model> &model_vector) {
     Minimax<Move, Slider> ai_strategy1{7};
 
     // file maybe updated, critical section
@@ -61,8 +46,36 @@ Trainer::play_games() {
     if (!winner.second) {       // if it wasn't a draw
         std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
         TDLeafLambda td_trainer(bob, model_mutex, referee.get_p1_stats());
-        td_trainer.update_weights();
+
+        vector_lock.lock();
+        model_vector.push_back(td_trainer.update_weights());
+        vector_lock.unlock();
+
     } else {
         std::cout << "The game ended in a draw!\n";
     }
+}
+
+void
+Trainer::manage_games(size_t ngames) {
+    std::thread games[ngames];
+    std::vector<Model> updated_models;
+    for (auto &game : games) {
+        game = std::thread(&Trainer::play_games, this, std::ref(updated_models));
+    }
+    for (auto &game : games) {
+        game.join();
+    }
+
+    auto first_model = updated_models.front();
+    Model::size_type nfeatures = first_model.size();
+    Model avg_model(first_model);
+    for (auto k = 0; k < nfeatures; ++k) {
+        double kth_sum = 0;
+        for (auto &updated_model : updated_models) {
+            kth_sum += updated_model[k];
+        }
+        avg_model[k] = kth_sum / updated_models.size();
+    }
+    avg_model.flush();
 }
