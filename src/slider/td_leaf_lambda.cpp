@@ -10,10 +10,8 @@
 
 
 TDLeafLambda::TDLeafLambda(Model &model,
-                           std::mutex &model_lock,
                            const std::vector<Move> &move_history)
         : model(model),
-          model_lock(model_lock),
           move_history(move_history) {}
 
 const Model&
@@ -46,7 +44,5 @@ TDLeafLambda::update_weights() {
         }
         model[k] += delta_weight;
     }
-    std::lock_guard<std::mutex> guard_flush(model_lock);
     return model;
-//    model.flush();
 }

@@ -44,15 +44,14 @@ Trainer::play_games(std::vector<Model> &model_vector) {
             board);
     auto winner = referee.start_game();
     if (!winner.second) {       // if it wasn't a draw
-        std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
-        TDLeafLambda td_trainer(bob, model_mutex, referee.get_p1_stats());
-
+        std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!" << std::endl;
+        TDLeafLambda td_trainer(bob, referee.get_p1_stats());
         vector_lock.lock();
         model_vector.push_back(td_trainer.update_weights());
         vector_lock.unlock();
 
     } else {
-        std::cout << "The game ended in a draw!\n";
+        std::cout << "The game ended in a draw!" << std::endl;
     }
 }
 
@@ -77,5 +76,6 @@ Trainer::manage_games(size_t ngames) {
         }
         avg_model[k] = kth_sum / updated_models.size();
     }
+    std::lock_guard<std::mutex> flush_guard(model_mutex);
     avg_model.flush();
 }
