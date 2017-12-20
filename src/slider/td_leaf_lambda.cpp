@@ -18,7 +18,7 @@ TDLeafLambda::TDLeafLambda(Model &model,
 
 void
 TDLeafLambda::update_weights() {
-    constexpr double alpha = 1.0;
+    constexpr double alpha = .1;
     constexpr double lambda = .7;
     std::vector<double> lambda_array;
     for (int t = 0; t < move_history.size() - 1; ++t) {
@@ -28,7 +28,6 @@ TDLeafLambda::update_weights() {
                             (std::get<V_INDEX>(move_history[i + 1].get_metadata()) -
                              std::get<V_INDEX>(move_history[i].get_metadata()));
         }
-//        std::cout << t_lambda_sum << std::endl;
         lambda_array.push_back(t_lambda_sum);
     }
 
