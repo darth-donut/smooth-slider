@@ -3,4 +3,4 @@
 pieces_left
 manhattan_dist
 a:99
-b:0.0027
+b:0.027
