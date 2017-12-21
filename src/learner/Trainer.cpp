@@ -56,8 +56,8 @@ Trainer::play_games(std::vector<Model> &model_vector) {
 }
 
 void
-Trainer::manage_games(size_t ngames) {
-    std::thread games[ngames];
+Trainer::manage_games(size_t n) {
+    std::thread games[n];
     std::vector<Model> updated_models;
     for (auto &game : games) {
         game = std::thread(&Trainer::play_games, this, std::ref(updated_models));
