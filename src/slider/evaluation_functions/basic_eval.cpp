@@ -14,6 +14,9 @@
 #include "util.h"
 #include "Board.h"
 
+#define BLOCK_PENALTY_MULTIPLIER 3
+#define BLOCK_PENALTY(n) (n * BLOCK_PENALTY_MULTIPLIER)
+
 
 static double f(double a, double b, double score);
 /// calculates the distance needed for all agent's pieces to move towards the edge of the board (to win).
@@ -25,6 +28,8 @@ static double f(double a, double b, double score);
 /// \param agent agent to calculate the distance for
 /// \return (true) distance (if there's no pieces with totally blocked path)
 static double calc_manhattan_dist(const Slider& state, SliderPlayer agent);
+inline static double normalize_manhanntan(const Slider &slider, double raw_score);
+inline static bool is_draw(const Slider &state);
 
 
 double
@@ -53,8 +58,8 @@ player_move_count(const Slider &state, size_t) {
 double
 manhattan_dist(const Slider &state, size_t) {
     auto agent = state.get_agent();
-    double agent_distance = calc_manhattan_dist(state, agent);
-    double opponent_distance = calc_manhattan_dist(state, other_player(agent));
+    double agent_distance = normalize_manhanntan(state, calc_manhattan_dist(state, agent));
+    double opponent_distance = normalize_manhanntan(state, calc_manhattan_dist(state, other_player(agent)));
     return opponent_distance - agent_distance;
 }
 
@@ -116,17 +121,25 @@ double
 evaluate(const Slider &state, size_t depth) {
     Model *model = state.get_model();
     double score = 0;
-    for (auto i = 0; i < model->size(); ++i) {
-        // function * weight
-        score += (model->phi[i](state, depth) * (*model)[i]);
-    }
-//    score *= (1 - (depth * 1.0) / (depth + 1));
-    double final_score = f(state.get_model()->a, state.get_model()->b, score);
-    // if it was dead even, the upper hand goes to the one with the current hand
-    if ((final_score == 0)) {
-        final_score = state.get_agent() == state.get_player() ? 1e-6 : -1e-6;
-    }
+    double final_score = score;
+    if (!is_draw(state)) {
+        for (auto i = 0; i < model->size(); ++i) {
+            // function * weight
+            score += (model->phi[i](state, depth) * (*model)[i]);
+        }
+        // apply tanh function with a and b parameters
+        final_score = f(state.get_model()->a, state.get_model()->b, score);
+        // if it was dead even, the upper hand goes to the one with the current hand
+        if ((final_score == 0)) {
+            final_score = state.get_agent() == state.get_player() ? 1e-6 : -1e-6;
+        }
+    }   // else, final_score is 0, indicating a draw game
     return final_score;
+}
+
+static bool
+is_draw(const Slider &state) {
+    return state.possible_moves().empty() && state.opponent_possible_moves().empty();
 }
 
 
@@ -181,13 +194,21 @@ calc_manhattan_dist(const Slider& state, SliderPlayer agent) {
                 } else {
                     if (++declined >= 3) {
                         // penalty - this piece is completely blocked
-                        distance += state.get_board().size() * 3;
+                        distance += BLOCK_PENALTY(state.get_board().size());
                     }
                 }
             }
         }
     }
     return distance;
+}
+
+static double
+normalize_manhanntan(const Slider &slider, double raw_score) {
+    auto board_size = slider.get_board().size();
+    auto pieces = board_size - 1;
+    double worst_case = pieces * BLOCK_PENALTY(board_size);
+    return raw_score / worst_case;
 }
 
 static double
