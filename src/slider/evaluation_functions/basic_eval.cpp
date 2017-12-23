@@ -15,10 +15,10 @@
 #include "Board.h"
 
 #define BLOCK_PENALTY_MULTIPLIER 3
-#define BLOCK_PENALTY(n) (n * BLOCK_PENALTY_MULTIPLIER)
+#define BLOCK_PENALTY(n) ((n) * (BLOCK_PENALTY_MULTIPLIER))
 
 
-static double f(double a, double b, double score);
+inline static double f(double a, double b, double score);
 /// calculates the distance needed for all agent's pieces to move towards the edge of the board (to win).
 /// Ignores enemy movement when doing so. When a piece has NO MOVE AT ALL to make (i.e. completely surrounded),
 /// that piece incurrs a penalty score of board size * 3 (arbitrary). Therefore, the returned value from this
@@ -128,7 +128,7 @@ evaluate(const Slider &state, size_t depth) {
             score += (model->phi[i](state, depth) * (*model)[i]);
         }
         // apply tanh function with a and b parameters
-        final_score = f(state.get_model()->a, state.get_model()->b, score);
+        final_score = f(state.get_model()->a, state.get_model()->b, (1.0 / depth) * score);
         // if it was dead even, the upper hand goes to the one with the current hand
         if ((final_score == 0)) {
             final_score = state.get_agent() == state.get_player() ? 1e-6 : -1e-6;
@@ -145,7 +145,7 @@ is_draw(const Slider &state) {
 
 
 // todo:
-// 1) decrease total block penalty (will prefer to block over winnign!)
+// 1) decrease total block penalty (will prefer to block over winning!)
 // 2) bias multiplier when enemy dist > 0 but agent_dist = 0 (i.e. we won) ==> should score a little more (biasness)
 // 3) use simplified manhattan distance instead -> we're always going straight as the shortest path anyway (unless obstacle)
 static double

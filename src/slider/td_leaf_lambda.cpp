@@ -14,35 +14,53 @@ TDLeafLambda::TDLeafLambda(Model &model,
         : model(model),
           move_history(move_history) {}
 
-const Model&
+const Model &
 TDLeafLambda::update_weights() {
-    constexpr double alpha = .1;
-    constexpr double lambda = .7;
+    using history_t = std::vector<Move>::size_type;
+    using model_t = Model::size_type;
+    constexpr double alpha = .3;
+    constexpr double lambda = .8;
     std::vector<double> lambda_array;
-    for (int t = 0; t < move_history.size() - 1; ++t) {
+    std::vector<double> raw_eval_score;
+
+    // compute lambda array
+    for (history_t t = 0; t < (move_history.size() - 1); ++t) {
         double t_lambda_sum = 0;
-        for (int i = t; i < move_history.size() - 1; ++i) {
-            t_lambda_sum += std::pow(lambda, i - t) *
-                            (std::get<V_INDEX>(move_history[i + 1].get_metadata()) -
-                             std::get<V_INDEX>(move_history[i].get_metadata()));
+        for (history_t i = t; i < (move_history.size() - 1); ++i) {
+            double temporal_difference = std::get<V_INDEX>(move_history[i + 1].get_metadata())
+                                         - std::get<V_INDEX>(move_history[i].get_metadata());
+            t_lambda_sum += std::pow(lambda, i - t) * temporal_difference;
         }
         lambda_array.push_back(t_lambda_sum);
     }
+    assert(lambda_array.size() == (move_history.size() - 1));
 
-    // for each weight:
-    for (int k = 0; k < model.size(); ++k) {
-        // delta w = alpha * sigma{t = 1, N - 1}(a * b * sech^2( b * meta.evalfscore) * phi_k(*meta.first, meta.depth) * sigma{i = t, N - 1}(lambda^(i-t) * d_i ) )
-        // SIG(t = 1, N - 1): FOR ALL STATES
-        double delta_weight = 0;
-        for (int t = 0; t < move_history.size() - 1; ++t) {
-            // meta.first = state, meta.second = eval value
-            auto meta = move_history[t].get_metadata();
-            delta_weight +=
-                    alpha * model.a * model.b * sech2(model.b * std::get<V_INDEX>(meta)) *
-                    model.phi[k](*std::get<STATE_INDEX>(meta), std::get<DEPTH_INDEX>(meta)) *
-                    lambda_array[t];
+
+    // compute raw_eval_score array
+    for (const auto &t : move_history) {
+        double raw_score = 0;
+        for (model_t k = 0; k < model.size(); ++k) {
+            const auto &meta = t.get_metadata();
+            const auto &state_ptr = std::get<STATE_INDEX>(meta);
+            const auto depth = std::get<DEPTH_INDEX>(meta);
+            raw_score += (model.phi[k](*state_ptr, depth) * model[k]);
         }
-        model[k] += delta_weight;
+        raw_eval_score.push_back(raw_score);
+    }
+    assert(raw_eval_score.size() == move_history.size());
+
+    for (model_t k = 0; k < model.size(); ++k) {
+        double delta_weight = 0;
+        for (history_t t = 0; t < (move_history.size() - 1); ++t) {
+            // meta.first = state, meta.second = eval value
+            const auto &meta = move_history[t].get_metadata();
+            const auto &state_ptr = std::get<STATE_INDEX>(meta);
+            const auto &eval_score = std::get<V_INDEX>(meta);
+            const auto depth = std::get<DEPTH_INDEX>(meta);
+            delta_weight += (model.a * model.b * model.phi[k](*state_ptr, depth) * sech2(model.b * raw_eval_score[t]) *
+                             lambda_array[t]);
+        }
+        model[k] += (alpha * delta_weight);
     }
     return model;
 }

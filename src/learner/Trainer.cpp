@@ -59,10 +59,11 @@ void
 Trainer::manage_games(size_t n) {
     std::vector<std::thread> games;
     std::vector<Model> updated_models;
-    games.resize(n);
+
     for (auto i = 0; i < n; ++i) {
-        games[i] = std::thread(&Trainer::play_games, this, std::ref(updated_models));
+        games.emplace_back(&Trainer::play_games, this, std::ref(updated_models));
     }
+
     for (auto &game : games) {
         game.join();
     }

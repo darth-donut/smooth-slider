@@ -10,6 +10,7 @@
 #include <string>
 #include <cmath>
 #include <regex>
+#include <stdexcept>
 
 #include "slider/slider_utils.h"
 
@@ -55,6 +56,9 @@ board_to_vector(const std::pair<size_t, size_t> &board_coord) {
 
 double
 sech2(double n) {
+    if (std::abs(n) >= 710.5) {
+        throw std::overflow_error("Potential overflow in sech2's cosh(n) function, fatal");
+    }
     return 1.0 / std::pow(std::cosh(n), 2);
 }
 #endif //SLIDER_UTIL_H
