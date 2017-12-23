@@ -117,6 +117,7 @@ straight_path_block(const Slider &state, size_t depth) {
     return blockage;
 }
 
+
 double
 evaluate(const Slider &state, size_t depth) {
     Model *model = state.get_model();
@@ -127,13 +128,15 @@ evaluate(const Slider &state, size_t depth) {
             // function * weight
             score += (model->phi[i](state, depth) * (*model)[i]);
         }
+        double raw_score = transform_score(score, depth);
         // apply tanh function with a and b parameters
-        final_score = f(state.get_model()->a, state.get_model()->b, (1.0 / depth) * score);
+        final_score = f(model->a, model->b, raw_score);
         // if it was dead even, the upper hand goes to the one with the current hand
-        if ((final_score == 0)) {
-            final_score = state.get_agent() == state.get_player() ? 1e-6 : -1e-6;
+        if (final_score == 0) {
+            final_score = (state.get_agent() == state.get_player()) ? 1e-6 : -1e-6;
         }
     }   // else, final_score is 0, indicating a draw game
+
     return final_score;
 }
 

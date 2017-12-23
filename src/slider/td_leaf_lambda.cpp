@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "td_leaf_lambda.h"
+#include "basic_eval.h"
 #include "util.h"
 
 
@@ -18,8 +19,8 @@ const Model &
 TDLeafLambda::update_weights() {
     using history_t = std::vector<Move>::size_type;
     using model_t = Model::size_type;
-    constexpr double alpha = .3;
-    constexpr double lambda = .8;
+    constexpr double alpha = .1;
+    constexpr double lambda = .7;
     std::vector<double> lambda_array;
     std::vector<double> raw_eval_score;
 
@@ -39,13 +40,13 @@ TDLeafLambda::update_weights() {
     // compute raw_eval_score array
     for (const auto &t : move_history) {
         double raw_score = 0;
+        const auto &meta = t.get_metadata();
+        const auto &state_ptr = std::get<STATE_INDEX>(meta);
+        const auto depth = std::get<DEPTH_INDEX>(meta);
         for (model_t k = 0; k < model.size(); ++k) {
-            const auto &meta = t.get_metadata();
-            const auto &state_ptr = std::get<STATE_INDEX>(meta);
-            const auto depth = std::get<DEPTH_INDEX>(meta);
             raw_score += (model.phi[k](*state_ptr, depth) * model[k]);
         }
-        raw_eval_score.push_back(raw_score);
+        raw_eval_score.push_back(transform_score(raw_score, depth));
     }
     assert(raw_eval_score.size() == move_history.size());
 
