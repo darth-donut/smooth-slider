@@ -11,8 +11,8 @@ set(SOURCE_FILES
         include/commons/util.h
         include/slider/Board.h
         include/slider/evaluation_functions/basic_eval.h
-        include/slider/gui/SliderGUI.h
-        include/slider/io/SliderIO.h
+        include/agents/gui/SliderGUI.h
+        include/agents/io/SliderIO.h
         include/slider/Move.h
         include/slider/Referee.h
         include/slider/Slider.h
@@ -21,18 +21,28 @@ set(SOURCE_FILES
         src/main.cpp
         src/slider/Board.cpp
         src/slider/evaluation_functions/basic_eval.cpp
-        src/slider/gui/SliderGUI.cpp
-        src/slider/io/SliderIO.cpp
+        src/agents/gui/SliderGUI.cpp
+        src/agents/io/SliderIO.cpp
         src/slider/Referee.cpp
-        src/slider/Slider.cpp src/slider/gui/slider_render_window.cpp include/slider/gui/slider_render_window.h src/slider/td_leaf_lambda.cpp include/slider/td_leaf_lambda.h src/model.cpp include/slider/model.h include/commons/resource.h)
+        src/slider/Slider.cpp
+        src/agents/gui/slider_render_window.cpp
+        include/agents/gui/slider_render_window.h
+        src/slider/td_leaf_lambda.cpp
+        include/slider/td_leaf_lambda.h
+        src/model.cpp
+        include/slider/model.h
+        include/commons/resource.h
+        src/learner/Trainer.cpp
+        include/learner/Trainer.h src/agents/basic/forward_slider.cpp include/agents/basic/forward_slider.h)
 
 include_directories(include/
         include/commons
         include/commons/ai
         include/slider
         include/slider/evaluation_functions
-        include/slider/gui
-        include/slider/io)
+        include/agents
+        include/agents/gui
+        include/agents/io)
 
 add_executable(${EXE} ${SOURCE_FILES})
 
@@ -45,4 +55,4 @@ target_link_libraries(${EXE} ${SFML_LIBRARIES})
 find_package(Threads REQUIRED)
 target_link_libraries(${EXE} ${CMAKE_THREAD_LIBS_INIT})
 
-set(CMAKE_CXX_FLAGS_RELEASE ${CMAKE_CXX_FLAGS_RELEASE} "-O3")
+set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -O3")

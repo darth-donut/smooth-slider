@@ -10,29 +10,30 @@
 #include <utility>
 #include <memory>
 #include <SFML/Graphics/RenderWindow.hpp>
-#include <slider/gui/slider_render_window.h>
 
+#include "agents/gui/slider_render_window.h"
 #include "Slider.h"
+#include "Board.h"
 
 class Referee {
 public:
     Referee(std::shared_ptr<Slider> p1,
             std::shared_ptr<Slider> p2,
-            Board::size_type n,
+            const Board& board,
             bool gather_stats = true)
             : p1(std::move(p1)),
               p2(std::move(p2)),
-              slider_board(n),
+              slider_board(board),
               statistics_mode(gather_stats) { assign_players(); }
 
     Referee(std::shared_ptr<Slider> p1,
             std::shared_ptr<Slider> p2,
-            Board::size_type n,
+            const Board& board,
             SliderRenderWindow *window,
             bool gather_stats = true)
             : p1(std::move(p1)),
               p2(std::move(p2)),
-              slider_board(n),
+              slider_board(board),
               window(window),
               statistics_mode(gather_stats) {
         assign_players();
@@ -89,15 +90,6 @@ private:
     void draw_gui();
 
     void gather_statistics(const Move &move);
-
-    /// only increment moves_made if it's below the threshold moves allowed
-    bool has_moves_left() {
-        if (moves_made >= max_moves_allowed) {
-            return false;
-        }
-        ++moves_made;
-        return true;
-    }
 };
 
 

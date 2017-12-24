@@ -6,11 +6,12 @@
 #include <SFML/Window/Event.hpp>
 #include<cassert>
 
-#include "slider/gui/SliderGUI.h"
+#include "agents/gui/SliderGUI.h"
 #include "Board.h"
+#include "util.h"
 
-SliderGUI::SliderGUI(SliderPlayer agent, size_t size, SliderPlayer player, const sf::RenderWindow& window) :
-    Slider(agent, size, player, nullptr, nullptr),
+SliderGUI::SliderGUI(SliderPlayer agent, const Board &board, SliderPlayer player, const sf::RenderWindow& window) :
+    Slider(agent, board, player, nullptr, nullptr),
     window(window) { }
 
 void
@@ -78,5 +79,4 @@ SliderGUI::player_piece_clicked(Board::size_type x, Board::size_type y) const {
                         : SliderPiece::Vertical;
     return board[translated.first][translated.second] == player_piece;
 }
-
 

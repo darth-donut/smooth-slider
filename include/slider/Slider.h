@@ -16,11 +16,15 @@
 
 template<typename T, typename S>
 class Strategy;
+
 class Model;
 
 class Slider {
 public:
-    Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model);
+    static const std::vector<SliderMove> moveset;
+public:
+    Slider(SliderPlayer agent, const Board &board, SliderPlayer player, Strategy<Move, Slider> *strategy,
+           Model *model);
 
     /// updates the board according to provided move
     /// \param move Move to make
@@ -37,6 +41,11 @@ public:
     /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
     /// \return a list of possible movements from current state
     std::vector<Move> possible_moves() const;
+
+    /// with the current board state, returns a vector of possible moves for the enemy
+    /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
+    /// \return a list of possible movements from current state
+    std::vector<Move> opponent_possible_moves() const;
 
 
     /// return a boolean to indicate if this state is already at its final state
@@ -65,6 +74,14 @@ public:
     /// \return const pointer(low-level const) to model that is attached to this slider player.
     Model *const get_model() const { return model; }
 
+    /// returns the hand to this player because the opponent has no valid moves left to make
+    /// side effect: returns hand to this player internally
+    void return_round() { player = agent; }
+    /// returns the hand to this player because the opponent has no valid moves left to make
+
+    /// opposite of return_round. This player loses this round
+    void lose_round() { player = other_player(agent); }
+
     /// next move this player is going to make (also automatically updates the board state internally)
     /// i.e. the referee doesn't have to ask this slider to update it's internal board with this new move.
     /// \param move this slider player wants to make
@@ -83,12 +100,6 @@ protected:
     mutable SliderPlayer player;
     // Which player is this agent representing (this is always a constant)
     const SliderPlayer agent;
-    std::vector<SliderMove> moveset{
-            SliderMove::Right,
-            SliderMove::Up,
-            SliderMove::Left,
-            SliderMove::Down
-    };
     Strategy<Move, Slider> *strategy;
     Model *model;
 };

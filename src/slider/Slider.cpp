@@ -11,11 +11,18 @@
 #include "slider/evaluation_functions/basic_eval.h"
 #include "util.h"
 
+const std::vector<SliderMove> Slider::moveset = {
+        SliderMove::Right,
+        SliderMove::Up,
+        SliderMove::Left,
+        SliderMove::Down
+};
 
-Slider::Slider(SliderPlayer agent, std::size_t size, SliderPlayer player, Strategy<Move, Slider> *strategy, Model *model)
+Slider::Slider(SliderPlayer agent, const Board& board, SliderPlayer player, Strategy<Move, Slider> *strategy,
+               Model *model)
         : agent(agent),
           size(size),
-          board(size),
+          board(board),
           player(player),
           strategy(strategy),
           model(model) {}
@@ -56,6 +63,17 @@ Slider::possible_moves() const {
     return potential_moves;
 }
 
+
+std::vector<Move>
+Slider::opponent_possible_moves() const {
+    auto save_player = player;
+    player = other_player(agent);
+    // player is now the opponent to this agent, return the possible moves for that state
+    auto ret_val = possible_moves();
+    player = save_player;
+    return ret_val;
+}
+
 bool
 Slider::is_leaf() const {
     // if either player won - it's a terminal node
@@ -63,24 +81,19 @@ Slider::is_leaf() const {
         board.get_piece_positions(SliderPlayer::Vertical).empty()) {
         return true;
     }
-
-    // temporarily 'fake' other player
-    player = other_player(player);
-    // see if opponent has no more moves left
-    auto opponent_no_moves = possible_moves().empty();
-    player = other_player(player);
-    // resume back to original player
-
-    // if BOTH has no moves left, return true => terminal node
-    return possible_moves().empty() && opponent_no_moves;
-
-
+    // if current round's player has no move left to make, then there's no child node
+    return possible_moves().empty();
 }
 
 void
 Slider::next_move(Move &move) {
-    auto ret_val = strategy->next_move(*this, compound_eval);
+    auto ret_val = strategy->next_move(*this, evaluate);
     assert(ret_val.second);
+    assert(ret_val.first.get_player() == agent);
+    if (!ret_val.second || ret_val.first.get_player() != agent) {
+        // should never happen, referee takes care of this for us
+        ret_val.first.error("Player has no valid move. Panic!");
+    }
     // remember to update our own board!
     update(ret_val.first);
     move = ret_val.first;

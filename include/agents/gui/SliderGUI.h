@@ -19,14 +19,15 @@
 class SliderGUI : public Slider {
 public:
     SliderGUI(SliderPlayer agent,
-              size_t size,
-              SliderPlayer player, const sf::RenderWindow&);
+              const Board &board,
+              SliderPlayer player, const sf::RenderWindow &);
 
     void next_move(Move &move) override;
+
     bool ready_to_move() override { return ready; };
 
 private:
-    const sf::RenderWindow& window;
+    const sf::RenderWindow &window;
     Move::Coordinate mouse_clk_pos;
     bool accept_mouse_response = false;
     bool ready = false;

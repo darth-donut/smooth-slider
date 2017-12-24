@@ -9,6 +9,7 @@
 #include <vector>
 #include <limits>
 #include <tuple>
+#include <cassert>
 
 #include "Strategy.h"
 #include "Move.h"
@@ -44,7 +45,7 @@ public:
 
 private:
     static constexpr double INF = std::numeric_limits<double>::max();
-    static constexpr double NINF = std::numeric_limits<double>::min();
+    static constexpr double NINF = std::numeric_limits<double>::lowest();
     size_type max_depth = std::numeric_limits<size_type>::max();
 private:
     std::tuple<std::shared_ptr<State>, double, size_type> maxValue(const State &state, double alpha, double beta, size_type depth,
@@ -105,6 +106,7 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
         }
         alpha = std::max(alpha, v);
     }
+    assert(principal_var != nullptr);
     return std::make_tuple(principal_var, v, principal_depth);
 }
 
@@ -131,6 +133,7 @@ Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_
         }
         beta = std::min(beta, v);
     }
+    assert(principal_var != nullptr);
     return std::make_tuple(principal_var, v, principal_depth);
 }
 

@@ -1,32 +1,40 @@
 #include <iostream>
 #include <thread>
 #include <SFML/Graphics.hpp>
+#include <slider/td_leaf_lambda.h>
+#include <learner/Trainer.h>
 
-#include "slider/gui/slider_render_window.h"
-#include "slider/io/SliderIO.h"
-#include "slider/gui/SliderGUI.h"
+#include "agents/basic/forward_slider.h"
+#include "agents/gui/slider_render_window.h"
+#include "agents/io/SliderIO.h"
+#include "agents/gui/SliderGUI.h"
 #include "slider/Referee.h"
 #include "model.h"
 
 #define SLIDER_GUI_TOGG 0
 
-void play_games(std::size_t board_size, SliderPlayer starting_player);
 
 
 int
 main() {
-    constexpr std::size_t board_size = 7;
+    constexpr std::size_t board_size = 5;
     SliderPlayer starting_player = SliderPlayer::Horizontal;
 
 #if SLIDER_GUI_TOGG
-    // GUI interface
-    SliderRenderWindow window(sf::VideoMode(800, 550), "Slider");
-    Minimax<Move, Slider> ai_strategy{9};
-    Model bob;
+    sf::ContextSettings settings;
+    settings.antialiasingLevel = 8; // 8x AA
+//     GUI interface
+    SliderRenderWindow window(sf::VideoMode(800, 550), "Slider", sf::Style::Titlebar | sf::Style::Close, settings);
+    Minimax<Move, Slider> ai_strategy{7};
+    Model bob(Resource::bob_model);
+
+    // board setup
+    Board board(board_size);
+
     Referee referee(
-            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy, &bob),
-            std::shared_ptr<Slider>(new SliderGUI(SliderPlayer::Horizontal, board_size, starting_player, window)),
-            board_size,
+            std::make_shared<Slider>(SliderPlayer::Vertical, board, starting_player, &ai_strategy, &bob),
+            std::make_shared<SliderGUI>(SliderPlayer::Horizontal, board, starting_player, window),
+            board,
             &window);
 
     while (window.isOpen()) {
@@ -41,40 +49,9 @@ main() {
         referee.update();
     }
 #else
-    // CMD interface
-
-    // Battle between 2 AI - use std::make_shared<Slider>(new SliderIO ... )
-    // for human CMD interaction instead
-    constexpr int ngames = 10;
-    std::thread games[ngames];
-
-    for (auto &game : games) {
-        game = std::thread(play_games, board_size, starting_player);
-    }
-    for (auto &game : games) {
-        game.join();
-    }
-
+    Trainer train_model(board_size, starting_player, 10000, 6);
+    train_model.begin_training();
 #endif
     return 0;
-}
-
-void
-play_games(std::size_t board_size, SliderPlayer starting_player) {
-    Minimax<Move, Slider> ai_strategy1{4};
-    Minimax<Move, Slider> ai_strategy2{5};
-    Model bob;
-    Model alice;
-    Referee referee(
-            std::make_shared<Slider>(SliderPlayer::Vertical, board_size, starting_player, &ai_strategy1, &bob),
-            std::make_shared<Slider>(SliderPlayer::Horizontal, board_size, starting_player, &ai_strategy2, &alice),
-            board_size);
-
-    auto winner = referee.start_game();
-    if (!winner.second) {       // if it wasn't a draw
-        std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!\n";
-    } else {
-        std::cout << "The game ended in a draw!\n";
-    }
 }
 
