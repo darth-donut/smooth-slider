@@ -55,6 +55,9 @@ Model::flush() const {
 
         std::ofstream os(fname);
 
+        // use fixed (non-scientific) notation
+        os << std::fixed;
+
         // 1. refill updated weights
         std::copy(weights.cbegin(), weights.cend(), std::ostream_iterator<double>(os, "\n"));
 
