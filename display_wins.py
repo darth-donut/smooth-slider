@@ -19,19 +19,14 @@ def _read_data(fname):
             draw += line.startswith("The")
     return (vertical, horizontal, draw)
 
-def _read_old(fname):
-    with open(fname) as fp:
-        next(fp)
-        return tuple(map(lambda x: int(x), fp.split(",")))
 
 def _update_wins(model_name, vert, hori, draw):
     fout = model_name + WR_FILE
     if os.path.exists(fout):
         # must obey HDR's order, v,h,d
-        old_v, old_h, old_d = _read_old(fout)
         with open(fout, "a") as fp:
             # must obey HDR's order, v,h,d
-            fp.write(",".join([str(vert + old_v), str(hori + old_h), str(draw + old_d)]) + '\n')
+            fp.write(",".join([str(vert), str(hori), str(draw)]) + "\n")
     else:
         with open(fout, "w") as fp:
             fp.write(",".join(HDR) + '\n')
