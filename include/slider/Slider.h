@@ -42,6 +42,12 @@ public:
     /// \return a list of possible movements from current state
     std::vector<Move> possible_moves() const;
 
+    /// with the current board state, returns a vector of possible moves
+    /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
+    /// \param p possible moves for player p
+    /// \return a list of possible movements from current state
+    std::vector<Move> possible_moves(SliderPlayer p) const;
+
     /// with the current board state, returns a vector of possible moves for the enemy
     /// O(3n) operation. (for each pieces left, for 3 possible moves, check if it is a legal move)
     /// \return a list of possible movements from current state
@@ -109,8 +115,7 @@ protected:
     /// size x size board
     std::size_t size;
     Board board;
-    // mutable -> @see Slider::is_leaf() (temporarily 'fake' other player to see what moves the have left)
-    mutable SliderPlayer player;
+    SliderPlayer player;
     // Which player is this agent representing (this is always a constant)
     const SliderPlayer agent;
     Strategy<Move, Slider> *strategy;

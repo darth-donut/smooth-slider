@@ -45,16 +45,16 @@ Slider::peek_update(const Move &move) const {
 }
 
 std::vector<Move>
-Slider::possible_moves() const {
+Slider::possible_moves(SliderPlayer p) const {
     std::vector<Move> potential_moves;
-    for (const auto &coord : board.get_piece_positions(player)) {
+    for (const auto &coord : board.get_piece_positions(p)) {
         for (auto move : moveset) {
-            if ((player == SliderPlayer::Vertical && move == SliderMove::Down) ||
-                (player == SliderPlayer::Horizontal && move == SliderMove::Left)) {
+            if ((p == SliderPlayer::Vertical && move == SliderMove::Down) ||
+                (p == SliderPlayer::Horizontal && move == SliderMove::Left)) {
                 // these move-sets aren't allowed!
                 continue;
             }
-            Move possible_move(player, move, coord);
+            Move possible_move(p, move, coord);
             if (board.is_legal(possible_move)) {
                 potential_moves.push_back(std::move(possible_move));
             }
@@ -65,13 +65,13 @@ Slider::possible_moves() const {
 
 
 std::vector<Move>
+Slider::possible_moves() const {
+    return possible_moves(player);
+}
+
+std::vector<Move>
 Slider::opponent_possible_moves() const {
-    auto save_player = player;
-    player = other_player(agent);
-    // player is now the opponent to this agent, return the possible moves for that state
-    auto ret_val = possible_moves();
-    player = save_player;
-    return ret_val;
+    return possible_moves(other_player(player));
 }
 
 void
