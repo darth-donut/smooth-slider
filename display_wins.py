@@ -22,15 +22,10 @@ def _read_data(fname):
 
 def _update_wins(model_name, vert, hori, draw):
     fout = model_name + WR_FILE
-    if os.path.exists(fout):
+    with open(fout, "w") as fp:
+        fp.write(",".join(HDR) + '\n')
         # must obey HDR's order, v,h,d
-        with open(fout, "a") as fp:
-            # must obey HDR's order, v,h,d
-            fp.write(",".join([str(vert), str(hori), str(draw)]) + "\n")
-    else:
-        with open(fout, "w") as fp:
-            fp.write(",".join(HDR) + '\n')
-            fp.write(",".join([str(vert), str(hori), str(draw)]) + "\n")
+        fp.write(",".join([str(vert), str(hori), str(draw)]) + "\n")
 
 
 def main(model_name, fname):
