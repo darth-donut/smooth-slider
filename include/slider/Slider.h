@@ -52,6 +52,19 @@ public:
     /// \return true if this state has no more children. False otherwise.
     bool is_leaf() const;
 
+    /// return a boolean to indicate if this state is in a draw state.
+    /// \return true if this state has both players with empty legal moves left
+    bool is_draw() const;
+
+    /// returns a boolean to indicate if there's a winner in this state
+    /// \return true if this state has a winner
+    bool has_winner() const;
+
+    /// returns the winner of this match. return value is unreliable if there's no winner. Always check with
+    /// Slider::has_winner before calling this method.
+    /// \return winner of this game. Undefined result if there's no winner.
+    SliderPlayer get_winner() const;
+
     /// return a representation of current state in this slider game
     /// \return Board state
     const Board &get_board() const { return board; }
@@ -104,5 +117,31 @@ protected:
     Model *model;
 };
 
+
+inline bool
+Slider::is_leaf() const {
+    // if either player won - it's a terminal node
+    if (board.get_piece_positions(SliderPlayer::Horizontal).empty() ||
+        board.get_piece_positions(SliderPlayer::Vertical).empty()) {
+        return true;
+    }
+    // if current round's player has no move left to make, then there's no child node
+    return possible_moves().empty();
+}
+
+inline bool
+Slider::is_draw() const {
+    return possible_moves().empty() && opponent_possible_moves().empty();
+}
+
+inline bool
+Slider::has_winner() const {
+    return board.has_winner();
+}
+
+inline SliderPlayer
+Slider::get_winner() const {
+    return board.get_winner();
+}
 
 #endif //SLIDER_SLIDER_H

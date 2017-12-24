@@ -74,17 +74,6 @@ Slider::opponent_possible_moves() const {
     return ret_val;
 }
 
-bool
-Slider::is_leaf() const {
-    // if either player won - it's a terminal node
-    if (board.get_piece_positions(SliderPlayer::Horizontal).empty() ||
-        board.get_piece_positions(SliderPlayer::Vertical).empty()) {
-        return true;
-    }
-    // if current round's player has no move left to make, then there's no child node
-    return possible_moves().empty();
-}
-
 void
 Slider::next_move(Move &move) {
     auto ret_val = strategy->next_move(*this, evaluate);
