@@ -28,7 +28,7 @@ inline double transform_score(double score, double depth);
 
 double
 transform_score(double score, double depth) {
-    return (1.0 / depth) * score;
+    return score;
 }
 
 #endif      // SLIDER_BASIC_EVAL_H
