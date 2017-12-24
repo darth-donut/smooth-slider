@@ -9,10 +9,13 @@
 #include <vector>
 #include <limits>
 #include <tuple>
+#include <cmath>
 #include <cassert>
 
 #include "Strategy.h"
 #include "Move.h"
+
+#define EPS 1e-6
 
 /// Constructs a minimax tree with alpha-beta pruning.
 /// Type constraints on Move requires a default constructor and a method
@@ -48,11 +51,13 @@ private:
     static constexpr double NINF = std::numeric_limits<double>::lowest();
     size_type max_depth = std::numeric_limits<size_type>::max();
 private:
-    std::tuple<std::shared_ptr<State>, double, size_type> maxValue(const State &state, double alpha, double beta, size_type depth,
-                                                       typename Strategy<Move, State>::evalf) const;
+    std::tuple<std::shared_ptr<State>, double, size_type>
+    maxValue(const State &state, double alpha, double beta, size_type depth,
+             typename Strategy<Move, State>::evalf) const;
 
-    std::tuple<std::shared_ptr<State>, double, size_type> minValue(const State &state, double alpha, double beta, size_type depth,
-                                                       typename Strategy<Move, State>::evalf) const;
+    std::tuple<std::shared_ptr<State>, double, size_type>
+    minValue(const State &state, double alpha, double beta, size_type depth,
+             typename Strategy<Move, State>::evalf) const;
 };
 
 template<typename T, typename State>
@@ -96,7 +101,11 @@ Minimax<T, State>::maxValue(const State &state, double alpha, double beta, size_
     for (const auto &move : state.possible_moves()) {
         auto child_node = state.peek_update(move);
         auto max_val = minValue(child_node, alpha, beta, depth + 1, eval);
-        if (std::get<V_INDEX>(max_val) > v) {
+        // update condition:
+        // 1. obviously, when principal_var's evalf score is > current v
+        // 2. when they are 'equal (within eps)' and the depth is smaller (i.e. faster to victory)
+        if (std::get<V_INDEX>(max_val) > v ||
+            ((std::abs(std::get<V_INDEX>(max_val) - v) < EPS) && std::get<DEPTH_INDEX>(max_val) < principal_depth)) {
             v = std::get<V_INDEX>(max_val);
             principal_var = std::get<STATE_INDEX>(max_val);
             principal_depth = std::get<DEPTH_INDEX>(max_val);
@@ -120,10 +129,14 @@ Minimax<T, State>::minValue(const State &state, double alpha, double beta, size_
     double v = INF;
     std::shared_ptr<State> principal_var = nullptr;
     size_type principal_depth = depth;
+    // update condition:
+    // 1. obviously, when principal_var's evalf score is < current v
+    // 2. when they are 'equal (within eps)' and the depth is greater (i.e. dilly dally in losing the game)
     for (const auto &move : state.possible_moves()) {
         auto child_node = state.peek_update(move);
         auto min_val = maxValue(child_node, alpha, beta, depth + 1, eval);
-        if (std::get<V_INDEX>(min_val) < v) {
+        if (std::get<V_INDEX>(min_val) < v ||
+            ((std::abs(std::get<V_INDEX>(min_val) - v) < EPS) && std::get<DEPTH_INDEX>(min_val) > principal_depth)) {
             v = std::get<V_INDEX>(min_val);
             principal_var = std::get<STATE_INDEX>(min_val);
             principal_depth = std::get<DEPTH_INDEX>(min_val);
