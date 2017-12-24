@@ -68,16 +68,19 @@ Trainer::manage_games(size_t n) {
         game.join();
     }
 
-    auto first_model = updated_models.front();
-    Model::size_type nfeatures = first_model.size();
-    Model avg_model(first_model);
-    for (auto k = 0; k < nfeatures; ++k) {
-        double kth_sum = 0;
-        for (auto &updated_model : updated_models) {
-            kth_sum += updated_model[k];
+    // only update model if there's one to update (update_models.size() == 0 when all games resulted in a draw)
+    if (!updated_models.empty()) {
+        auto first_model = updated_models.front();
+        Model::size_type nfeatures = first_model.size();
+        Model avg_model(first_model);
+        for (auto k = 0; k < nfeatures; ++k) {
+            double kth_sum = 0;
+            for (auto &updated_model : updated_models) {
+                kth_sum += updated_model[k];
+            }
+            avg_model[k] = kth_sum / updated_models.size();
         }
-        avg_model[k] = kth_sum / updated_models.size();
+        std::lock_guard<std::mutex> flush_guard(model_mutex);
+        avg_model.flush();
     }
-    std::lock_guard<std::mutex> flush_guard(model_mutex);
-    avg_model.flush();
 }
