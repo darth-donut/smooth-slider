@@ -49,7 +49,7 @@ main() {
         referee.update();
     }
 #else
-    Trainer train_model(board_size, starting_player, 10000, 6);
+    Trainer train_model(board_size, starting_player, 1000, 6);
     train_model.begin_training();
 #endif
     return 0;

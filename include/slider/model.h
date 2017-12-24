@@ -42,13 +42,10 @@ private:
     std::vector<std::string> phis;
     const std::string fname;
     EvalDict eval_dict = {
-            {"pieces_left",          pieces_left},
-            {"enemy_move_count",     enemy_move_count},
-            {"player_move_count",    player_move_count},
-            {"manhattan_dist",       manhattan_dist},
-            {"enemy_blocked_pieces", enemy_blocked_pieces},
-            {"unblockable_path",     unblockable_path},
-            {"straight_path_block",     straight_path_block}
+            {"pieces_left",                    pieces_left},
+            {"manhattan_dist",                 manhattan_dist},
+            {"move_count",                     move_count},
+            {"completely_blocked_piece_count", completely_blocked_piece_count}
     };
 };
 

@@ -38,9 +38,9 @@ TDLeafLambda::update_weights() {
 
 
     // compute raw_eval_score array
-    for (const auto &t : move_history) {
+    for (history_t t = 0; t < (move_history.size() - 1); ++t) {
         double raw_score = 0;
-        const auto &meta = t.get_metadata();
+        const auto &meta = move_history[t].get_metadata();
         const auto &state_ptr = std::get<STATE_INDEX>(meta);
         const auto depth = std::get<DEPTH_INDEX>(meta);
         for (model_t k = 0; k < model.size(); ++k) {
@@ -48,8 +48,15 @@ TDLeafLambda::update_weights() {
         }
         raw_eval_score.push_back(transform_score(raw_score, depth));
     }
-    assert(raw_eval_score.size() == move_history.size());
 
+    // tdl loops from t=1..N-1 (skipping the last eval function) because we've hard coded the WIN_STATE_SCORE and
+    // LOSE_STATE_SCORE (basic_eval.cpp). TDL's aim is to adjust the weights so that they approach these scores
+    assert(std::get<STATE_INDEX>(move_history.back().get_metadata())->has_winner());
+    assert(raw_eval_score.size() == (move_history.size() - 1));
+//
+//    std::cout << "---------------------------------------------------\n";
+//    std::cout << "Model size: " << model.size() << '\n' << "move_history.size(): " << move_history.size() << std::endl;
+//    std::cout << "---------------------------------------------------\n";
     for (model_t k = 0; k < model.size(); ++k) {
         double delta_weight = 0;
         for (history_t t = 0; t < (move_history.size() - 1); ++t) {
@@ -58,6 +65,7 @@ TDLeafLambda::update_weights() {
             const auto &state_ptr = std::get<STATE_INDEX>(meta);
             const auto &eval_score = std::get<V_INDEX>(meta);
             const auto depth = std::get<DEPTH_INDEX>(meta);
+//            std::cout << sech2(model.b * raw_eval_score[t]) << std::endl;
             delta_weight += (model.a * model.b * model.phi[k](*state_ptr, depth) * sech2(model.b * raw_eval_score[t]) *
                              lambda_array[t]);
         }

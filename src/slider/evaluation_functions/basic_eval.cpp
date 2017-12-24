@@ -19,6 +19,7 @@
 
 
 inline static double f(double a, double b, double score);
+
 /// calculates the distance needed for all agent's pieces to move towards the edge of the board (to win).
 /// Ignores enemy movement when doing so. When a piece has NO MOVE AT ALL to make (i.e. completely surrounded),
 /// that piece incurrs a penalty score of board size * 3 (arbitrary). Therefore, the returned value from this
@@ -27,9 +28,11 @@ inline static double f(double a, double b, double score);
 /// \param state current state
 /// \param agent agent to calculate the distance for
 /// \return (true) distance (if there's no pieces with totally blocked path)
-static double calc_manhattan_dist(const Slider& state, SliderPlayer agent);
+static double calc_manhattan_dist(const Slider &state, SliderPlayer agent);
+
 inline static double normalize_manhanntan(const Slider &slider, double raw_score);
-inline static bool is_draw(const Slider &state);
+
+static double player_blocked_pieces(const Slider &state, SliderPlayer player);
 
 
 double
@@ -42,60 +45,36 @@ pieces_left(const Slider &state, size_t) {
 }
 
 double
-enemy_move_count(const Slider &state, size_t) {
-    auto opponent = other_player(state.get_agent());
-    double enemy_pieces_left = state.get_board().get_piece_positions(opponent).size();
-    // each piece has only a max of 3 possible moves at any time.
-    // (maybe lower, but never higher)
-    return (enemy_pieces_left * 3) - state.opponent_possible_moves().size();
+move_count(const Slider &state, size_t) {
+    double agent_moves = state.possible_moves().size();
+    double opponent_moves = state.opponent_possible_moves().size();
+    return agent_moves - opponent_moves;
 }
 
 double
-player_move_count(const Slider &state, size_t) {
-    return state.possible_moves().size();
+completely_blocked_piece_count(const Slider &state, size_t) {
+    auto player = state.get_agent();
+    auto enemy = other_player(player);
+    return player_blocked_pieces(state, enemy) - player_blocked_pieces(state, player);
 }
 
 double
 manhattan_dist(const Slider &state, size_t) {
     auto agent = state.get_agent();
-    double agent_distance = normalize_manhanntan(state, calc_manhattan_dist(state, agent));
-    double opponent_distance = normalize_manhanntan(state, calc_manhattan_dist(state, other_player(agent)));
+//    double agent_distance = normalize_manhanntan(state, calc_manhattan_dist(state, agent));
+//    double opponent_distance = normalize_manhanntan(state, calc_manhattan_dist(state, other_player(agent)));
+    double agent_distance = calc_manhattan_dist(state, agent);
+    double opponent_distance  = calc_manhattan_dist(state, other_player(agent));
     return opponent_distance - agent_distance;
 }
 
-double
-enemy_blocked_pieces(const Slider &state, size_t) {
-    auto enemy = other_player(state.get_agent());
-    auto enemy_pieces_coord = state
-            .get_board()
-            .get_piece_positions(enemy);
-    int blocked = 0;
-    for (const auto &coord : enemy_pieces_coord) {
-        for (const auto &move : Slider::moveset) {
-            if ((enemy == SliderPlayer::Vertical && move == SliderMove::Down) ||
-                (enemy == SliderPlayer::Horizontal && move == SliderMove::Left)) {
-                // these move-sets aren't allowed!
-                continue;
-            }
-            Move possible_move(enemy, move, coord);
-            if (state.get_board().is_legal(possible_move)) {
-                break;
-            } else {
-                // if even the last move is not legal, we have a piece that's totally blocked
-                blocked += (move == Slider::moveset.back());
-            }
-        }
-    }
-    return blocked;
-}
-
-double
+/*double
 unblockable_path(const Slider &state, size_t) {
     // todo
     return 0;
-}
+}*/
 
-double
+/*double
 straight_path_block(const Slider &state, size_t depth) {
     size_t blockage = 0;
     auto enemy = other_player(state.get_agent());
@@ -115,7 +94,7 @@ straight_path_block(const Slider &state, size_t depth) {
         }
     }
     return blockage;
-}
+}*/
 
 
 double
@@ -123,7 +102,7 @@ evaluate(const Slider &state, size_t depth) {
     Model *model = state.get_model();
     double score = 0;
     double final_score = score;
-    if (!is_draw(state)) {
+    if (!state.is_draw() && !state.has_winner()) {
         for (auto i = 0; i < model->size(); ++i) {
             // function * weight
             score += (model->phi[i](state, depth) * (*model)[i]);
@@ -135,16 +114,27 @@ evaluate(const Slider &state, size_t depth) {
         if (final_score == 0) {
             final_score = (state.get_agent() == state.get_player()) ? 1e-6 : -1e-6;
         }
-    }   // else, final_score is 0, indicating a draw game
+    } else if (state.has_winner()) {
+        if (state.get_winner() == state.get_agent()) {
+            // win = max allowed value = model's a coefficient
+            final_score = model->a;
+        } else {
+            // win = min allowed value = -1 * (model's a coefficient)
+            final_score = -model->a;
+        }
+    } else {  // else, final_score is 0, indicating a draw game
+//        if (state.is_draw()) {
+//            std::cout << "DRAW:\n";
+//        } else {
+//            std::cout << "FATAL ERROR:\n";
+//        };
 
+    }
+//    std::cout << state.get_board()
+//              << "\t\t | raw score: " << score << "\t | final_score: "
+//              << final_score << "\n----------------" << std::endl;
     return final_score;
 }
-
-static bool
-is_draw(const Slider &state) {
-    return state.possible_moves().empty() && state.opponent_possible_moves().empty();
-}
-
 
 
 // todo:
@@ -152,7 +142,7 @@ is_draw(const Slider &state) {
 // 2) bias multiplier when enemy dist > 0 but agent_dist = 0 (i.e. we won) ==> should score a little more (biasness)
 // 3) use simplified manhattan distance instead -> we're always going straight as the shortest path anyway (unless obstacle)
 static double
-calc_manhattan_dist(const Slider& state, SliderPlayer agent) {
+calc_manhattan_dist(const Slider &state, SliderPlayer agent) {
     double distance = 0;
     const auto all_coords = state.get_board().get_piece_positions(agent);
 
@@ -205,6 +195,32 @@ calc_manhattan_dist(const Slider& state, SliderPlayer agent) {
     }
     return distance;
 }
+
+static double
+player_blocked_pieces(const Slider &state, SliderPlayer player) {
+    auto player_piece_coords = state
+            .get_board()
+            .get_piece_positions(player);
+    int blocked = 0;
+    for (const auto &coord : player_piece_coords) {
+        for (const auto &move : Slider::moveset) {
+            if ((player == SliderPlayer::Vertical && move == SliderMove::Down) ||
+                (player == SliderPlayer::Horizontal && move == SliderMove::Left)) {
+                // these move-sets aren't allowed!
+                continue;
+            }
+            Move possible_move(player, move, coord);
+            if (state.get_board().is_legal(possible_move)) {
+                break;
+            } else {
+                // if even the last move is not legal, we have a piece that's totally blocked
+                blocked += (move == Slider::moveset.back());
+            }
+        }
+    }
+    return blocked;
+}
+
 
 static double
 normalize_manhanntan(const Slider &slider, double raw_score) {

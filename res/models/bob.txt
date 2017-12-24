@@ -1,10 +1,10 @@
-1
-1
-1
-1
+4.605166
+-3.992180
+4.006351
+0.048983
 pieces_left
 manhattan_dist
 move_count
 completely_blocked_piece_count
-a:99
-b:0.028
+a:10.000000
+b:0.028000
