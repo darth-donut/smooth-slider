@@ -111,13 +111,23 @@ public:
     /// \return true if this player is ready to make a move, defaults to true
     virtual bool ready_to_move() { return true; }
 
+    virtual ~Slider() = default;
+
+    Slider &operator=(Slider &&) = default;
+
+    Slider &operator=(const Slider &) = default;
+
+    Slider(Slider &&) = default;
+
+    Slider(const Slider &) = default;
+
 protected:
     /// size x size board
     std::size_t size;
     Board board;
     SliderPlayer player;
     // Which player is this agent representing (this is always a constant)
-    const SliderPlayer agent;
+    SliderPlayer agent;
     Strategy<Move, Slider> *strategy;
     Model *model;
 };
