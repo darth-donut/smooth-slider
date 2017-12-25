@@ -40,7 +40,7 @@ private:
     std::vector<double> weights;
     // phi function in string format
     std::vector<std::string> phis;
-    const std::string fname;
+    std::string fname;
     EvalDict eval_dict = {
             {"pieces_left",                    pieces_left},
             {"manhattan_dist",                 manhattan_dist},

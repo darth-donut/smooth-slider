@@ -30,9 +30,10 @@ Trainer::play_games(std::vector<Model> &model_vector) {
     Minimax<Move, Slider> ai_strategy1{7};
 
     // file maybe updated, critical section
-    model_mutex.lock();
-    Model bob(Resource::bob_model);
-    model_mutex.unlock();
+    Model bob; {
+        std::lock_guard<std::mutex> lock(model_mutex);
+        bob = Model(Resource::bob_model);
+    }
     // end of critical section
 
     // board design
@@ -46,10 +47,8 @@ Trainer::play_games(std::vector<Model> &model_vector) {
     if (!winner.second) {       // if it wasn't a draw
         std::cout << (winner.first == SliderPlayer::Horizontal ? "Horizontal" : "Vertical") << " won!" << std::endl;
         TDLeafLambda td_trainer(bob, referee.get_p1_stats());
-        vector_lock.lock();
+        std::lock_guard<std::mutex> lock(vector_lock);
         model_vector.push_back(td_trainer.update_weights());
-        vector_lock.unlock();
-
     } else {
         std::cout << "The game ended in a draw!" << std::endl;
     }
