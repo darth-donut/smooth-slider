@@ -1,7 +1,7 @@
-4
-2
-1
-1
+5.164057
+-9.680082
+5.136156
+1.174374
 pieces_left
 manhattan_dist
 move_count

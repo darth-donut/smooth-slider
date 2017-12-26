@@ -8,12 +8,25 @@
 
 #include "Slider.h"
 
-template <typename T, typename State>
+template<typename T, typename State>
 class Strategy {
 public:
     // evaluation function should return a double, and take a const ref to state, with additional param for depth
-    typedef double evalf (const State&, size_t);
-    virtual std::pair<T, bool> next_move(const State&, evalf) const = 0 ;
+    typedef double evalf(const State &, size_t);
+
+    virtual std::pair<T, bool> next_move(const State &, evalf) const = 0;
+
+    Strategy() = default;
+
+    Strategy(const Strategy &) = default;
+
+    Strategy(Strategy &&) noexcept = default;
+
+    Strategy &operator=(const Strategy &) = default;
+
+    Strategy &operator=(Strategy &&) noexcept = default;
+
+    virtual ~Strategy() = default;
 };
 
 
