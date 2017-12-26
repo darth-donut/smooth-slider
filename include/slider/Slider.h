@@ -113,11 +113,11 @@ public:
 
     virtual ~Slider() = default;
 
-    Slider &operator=(Slider &&) = default;
+    Slider &operator=(Slider &&) noexcept = default;
 
     Slider &operator=(const Slider &) = default;
 
-    Slider(Slider &&) = default;
+    Slider(Slider &&) noexcept = default;
 
     Slider(const Slider &) = default;
 
